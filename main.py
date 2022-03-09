@@ -1,29 +1,29 @@
 import pygame
-
+from map import preparedMap
 from agent import trashmaster
-
-
 
 pygame.init()
 
-pygame.display.set_caption('Wall-e')
+#config
+SCREEN_SIZE = [512, 512]
+BACKGROUND_COLOR = '#ffffff'
 
-screen = pygame.display.set_mode([512, 512])
-screen.fill(pygame.Color('#ffffff'))
+if __name__ == '__main__':
 
+    pygame.init()
 
-tileImage = pygame.image.load('tile1.png')
+    # tytul okna
+    pygame.display.set_caption('Wall-e')
 
-surfaceSize = width, height = (512, 512)
-surface = pygame.Surface(surfaceSize)
+    screen = pygame.display.set_mode(SCREEN_SIZE)
+    screen.fill(pygame.Color(BACKGROUND_COLOR))
 
+    # krata
+    map = preparedMap(SCREEN_SIZE)
+    screen.blit(map, (0,0))
 
-
-for x in range(0, 512, 16):
-    for y in range(0, 512, 16):
-        surface.blit(tileImage, (x, y))
-
-screen.blit(surface, (0,0))
+    # update okna
+    pygame.display.update()
 
 smieciara1 = trashmaster()
 smieciara_list = pygame.sprite.Group()
