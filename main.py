@@ -1,5 +1,8 @@
 import pygame
 from map import preparedMap
+from agent import trashmaster
+
+pygame.init()
 
 #config
 SCREEN_SIZE = [512, 512]
@@ -22,12 +25,18 @@ if __name__ == '__main__':
     # update okna
     pygame.display.update()
 
-    # event loop
-    running = True
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
+smieciara1 = trashmaster()
+smieciara_list = pygame.sprite.Group()
+smieciara_list.add(smieciara1)
+smieciara_list.draw(screen)
 
-    # end
-    pygame.quit()
+pygame.display.update()
+
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+   
+
+pygame.quit()
