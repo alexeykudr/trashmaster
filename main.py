@@ -1,32 +1,33 @@
 import pygame
-pygame.init()
+from map import preparedMap
 
-pygame.display.set_caption('Wall-e')
+#config
+SCREEN_SIZE = [512, 512]
+BACKGROUND_COLOR = '#ffffff'
 
-screen = pygame.display.set_mode([512, 512])
-screen.fill(pygame.Color('#ffffff'))
+if __name__ == '__main__':
 
+    pygame.init()
 
-tileImage = pygame.image.load('tile1.png')
+    # tytul okna
+    pygame.display.set_caption('Wall-e')
 
-surfaceSize = width, height = (512, 512)
-surface = pygame.Surface(surfaceSize)
+    screen = pygame.display.set_mode(SCREEN_SIZE)
+    screen.fill(pygame.Color(BACKGROUND_COLOR))
 
-for x in range(0, 512, 16):
-    for y in range(0, 512, 16):
-        surface.blit(tileImage, (x, y))
+    # krata
+    map = preparedMap(SCREEN_SIZE)
+    screen.blit(map, (0,0))
 
-screen.blit(surface, (0,0))
+    # update okna
+    pygame.display.update()
 
-pygame.display.update()
+    # event loop
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
 
-running = True
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-   
-
-pygame.quit()
-
-# test push
+    # end
+    pygame.quit()
