@@ -3,10 +3,6 @@ from map import preparedMap
 from agent import trashmaster
 
 
-#config
-SCREEN_SIZE = [512, 512]
-BACKGROUND_COLOR = '#ffffff'
-
 class WalleGame():
     
     def __init__(self):
@@ -17,7 +13,7 @@ class WalleGame():
         pygame.display.set_caption('Wall-e')
         
         
-        self.screen = pygame.display.set_mode(SCREEN_SIZE)
+        self.screen = pygame.display.set_mode(self.SCREEN_SIZE)
         self.screen.fill(pygame.Color(self.BACKGROUND_COLOR))
         
         # krata
