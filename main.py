@@ -1,9 +1,14 @@
 import pygame
 from map import preparedMap
 from agent import trashmaster
-# import os
-# os.environ["SDL_VIDEODRIVER"] = "dummy"
 
+
+class WalleGame():
+    def __init__(self):
+        pass
+    
+    
+    
 pygame.init()
 
 #config
