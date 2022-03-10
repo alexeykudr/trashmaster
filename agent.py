@@ -5,7 +5,6 @@ class trashmaster(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         
-        
         self.images = []
         self.image = pygame.image.load("resources/textures/trashmaster_blu.png")
         self.image = pygame.transform.scale(self.image, (16, 16))
