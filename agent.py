@@ -1,14 +1,14 @@
 import pygame.image
 
-
 class trashmaster(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self,x,y,img,vel):
         super().__init__()
         
-        self.images = []
-        self.image = pygame.image.load("resources/textures/trashmaster_blu.png")
-        self.image = pygame.transform.scale(self.image, (16, 16))
-        self.images.append(self.image)
+        self.x=x
+        self.y=y
+        self.img = img
+        self.velocity = vel
+    
+        self.image = pygame.image.load(img)
+        self.image = pygame.transform.scale(self.image, (self.x,self.y))
         self.rect = self.image.get_rect()
-
-        garbagetruck_list = pygame.sprite.Group()
