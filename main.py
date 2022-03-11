@@ -34,7 +34,7 @@ def main():
     game = WalleGame()
     game.update_window()
     
-    smieciara_object = trashmaster()
+    smieciara_object = trashmaster(16,16,"resources/textures/trashmaster_blu.png",16)
     game.draw_trashmaster(smieciara_object)
 
     game.update_window()
