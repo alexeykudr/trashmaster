@@ -23,19 +23,20 @@ class WalleGame():
     def update_window(self):
         pygame.display.update()
     
-    def draw_trashmaster(self, smieciara: trashmaster):
-        smieciara_list = pygame.sprite.Group()
-        smieciara_list.add(smieciara)
-        smieciara_list.draw(self.screen)
+    def draw_trashmaster(self, smieciara: trashmaster, pos):
+        # pos => (x, y)
+        self.screen.blit(smieciara.image, pos )
+    
+    def reloadMap(self):
+        self.screen.fill(pygame.Color(self.BACKGROUND_COLOR))
+        self.screen.blit(self.map, (0,0))
         
-        
-
 def main():
     game = WalleGame()
     game.update_window()
     
-    smieciara_object = trashmaster(16,16,"resources/textures/trashmaster_blu.png",16)
-    game.draw_trashmaster(smieciara_object)
+    smieciara_object = trashmaster(16,16,"resources/textures/trashmaster_blu.png")
+    game.draw_trashmaster(smieciara_object, (0, 0))
 
     game.update_window()
 
@@ -45,7 +46,11 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-                pygame.quit()
+            if event.type == pygame.KEYDOWN:
+                game.reloadMap()
+                game.draw_trashmaster(smieciara_object, 
+                    smieciara_object.movement(event.key, 16))
+                game.update_window()
     pygame.quit()
    
 
