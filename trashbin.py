@@ -2,12 +2,15 @@ import pygame.image
 
 class trashbin(pygame.sprite.Sprite):
     
-    def __init__(self,x,y,img):
+    def __init__(self,x,y,img, type):
         super().__init__()
         
         # dimensions
         self.width = 16
         self.height = 16
+
+        # trashbin type
+        self.type = type
 
         # spawn coords
         self.x = x
