@@ -10,8 +10,8 @@ class trashbin(pygame.sprite.Sprite):
         self.height = 16
 
         # spawn coords
-        self.x = 0
-        self.y = 0
+        self.x = x
+        self.y = y
     
         # load trashbin image
         self.image = pygame.image.load(img)
