@@ -1,4 +1,5 @@
 import pygame as pg
+from settings import *
 import pytmx
 
 # config
@@ -12,6 +13,7 @@ import pytmx
 #         for y in range(0, screenSize[1], TILE_SIZE):
 #             surface.blit(tileImage, (x, y))
 #     return surface
+
 def collide_hit_rect(one, two):
     return one.hit_rect.colliderect(two.rect)
 class TiledMap:
@@ -46,18 +48,18 @@ class Camera:
     def apply(self,entity):
         return entity.rect.move(self.camera.topleft)
 
-    # def apply_rect(self, rect):
-    #     return rect.move(self.camera.topleft)
+    def apply_rect(self, rect):
+         return rect.move(self.camera.topleft)
     
     def update(self,target):
-        x = -target.rect.x + int(1024/2)
-        y = -target.rect.y + int(768 / 2)
+        x = -target.rect.x + int(WIDTH/2)
+        y = -target.rect.y + int(HEIGHT / 2)
 
         # limit scrolling to map size
         x = min(0, x)  # left
         y = min(0, y)  # top
-        x = max(-(self.width - 1024), x)  # right
-        y = max(-(self.height - 768), y)  # bottom
+        x = max(-(self.width - WIDTH), x)  # right
+        y = max(-(self.height - HEIGHT), y)  # bottom
         self.camera = pg.Rect(x, y, self.width, self.height)
 
 
