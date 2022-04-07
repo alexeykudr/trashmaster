@@ -7,6 +7,8 @@ from map import *
 # from house import House
 from sprites import *
 from settings import *
+from map_new import map_new
+from map_new import map_utils
 import math
 
 class Game():
@@ -31,8 +33,13 @@ class Game():
         self.wall_img = pg.image.load(path.join(img_folder, WALL_IMG)).convert_alpha()
         self.wall_img = pg.transform.scale(self.wall_img, (TILESIZE, TILESIZE))
 
+        # self.new_map = map_new.getMap()
+        
+
     def new(self):
         # initialize all variables and do all the setup for a new game
+
+        self.roadTiles, self.wallTiles = map_new.getTiles()
 
         self.all_sprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
@@ -43,11 +50,9 @@ class Game():
             if tile_object.name == 'wall':
                 Obstacle(self, tile_object.x, tile_object.y, tile_object.width, tile_object.height)
 
-        # self.screen.blit(self.map_img, (0,0))
         self.camera = Camera(self.map.width, self.map.height)
         self.draw_debug = False
         
-        #self.screen.blit(self.map_img, self.camera.apply_rect(self.map_rect))
 
     def run(self):
         # game loop - set self.playing = False to end the game 
@@ -74,23 +79,19 @@ class Game():
         for y in range(0, HEIGHT, TILESIZE):
             pg.draw.line(self.screen, LIGHTGREY, (0, y), (WIDTH, y))
 
-
-    # def draw(self, drawable_object, pos):
-    #     # pos => (x, y)
-    #     # drawable object must have .image field inside class
-    #     self.screen.blit(drawable_object.image, pos )
-
     def draw(self):
         pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
-        self.screen.blit(self.map_img, self.camera.apply_rect(self.map_rect))
+        # self.screen.blit(self.new_surface, self.camera.apply_rect(self.map_rect))
+        map_new.renderTiles(self.roadTiles, self.screen, self.camera)
+        map_new.renderTiles(self.wallTiles, self.screen, self.camera, self.draw_debug)
         
         for sprite in self.all_sprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
             if self.draw_debug:
                 pg.draw.rect(self.screen, CYAN, self.camera.apply_rect(sprite.hit_rect), 1)
-        if self.draw_debug:
-            for wall in self.walls:
-                pg.draw.rect(self.screen, CYAN, self.camera.apply_rect(wall.rect), 1)
+        # if self.draw_debug:
+        #     for wall in self.walls:
+        #         pg.draw.rect(self.screen, CYAN, self.camera.apply_rect(wall.rect), 1)
         
         pg.display.flip()
 
@@ -113,10 +114,6 @@ class Game():
 
     def show_go_screen(self):
         pass
-
-    # def reloadMap(self):
-    #      #self.screen.fill(pygame.Color(self.BACKGROUND_COLOR))
-    #      self.screen.blit(self.map_img, (0,0))
         
 # def main():
 #     game = WalleGame()

@@ -5,6 +5,7 @@ vec = pg.math.Vector2
 #colors
 LIGHTGREY = (100, 100, 100)
 CYAN = (0, 255, 255)
+RED = (255, 0, 0)
 
 
 #game settings
