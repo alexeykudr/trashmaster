@@ -144,37 +144,15 @@ class Game():
 #     pygame.quit()
 # if __name__ == '__main__':
 #     main()
-def graph():
-    with open('data.txt', 'r') as f:
-        matrix = [[int(x) for x in line.split(',') if x != '\n'] for line in f.readlines()]
-    adj = {}
-    for yi, yvalue in enumerate(matrix):
-        for xi, xvalue in enumerate(matrix):
-            if xi - 1 >= 0 and matrix[yi][xi - 1] == 0:
-                adj[(xi, yi)] = adj.get((xi, yi), []) + [(xi - 1, yi)]
-
-            if xi + 1 < len(matrix[yi]) and matrix[yi][xi + 1] == 0:
-                adj[(xi, yi)] = adj.get((xi, yi), []) + [(xi + 1, yi)]
-
-            if yi - 1 >= 0 and matrix[yi - 1][xi] == 0:
-                adj[(xi, yi)] = adj.get((xi, yi), []) + [(xi, yi - 1)]
-
-            if yi + 1 < len(matrix) and matrix[yi + 1][xi] == 0:
-                adj[(xi, yi)] = adj.get((xi, yi), []) + [(xi, yi + 1)]
-
-    l = sorted(list(adj.items()), key=lambda x: (x[0]))
-    print(*l, sep='\n')
-
-    return l
-
 
 start_node = (0, 2)
-target_node = (0, 2)
+target_node = (5, 3)
+find_path = BreadthSearchAlgorithm(start_node, target_node)
 # create the game object
 g = Game()
 g.show_start_screen()
 while True:
     g.new()
+    path_found = find_path.bfs()
     g.run()
     g.show_go_screen()
-    SearchBfs.BreadthSearchAlgorithm(graph, start_node, target_node)
