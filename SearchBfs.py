@@ -24,4 +24,4 @@ class BreadthSearchAlgorithm:
                         return next_path
                 visited.append(node)
 
-        return
+        return "Path found"
