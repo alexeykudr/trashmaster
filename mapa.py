@@ -2,7 +2,6 @@ import pygame as pg
 import pytmx
 
 
-
 # config
 # TILE_SIZE = 16
 
@@ -16,15 +15,14 @@ import pytmx
 #     return surface
 
 class TiledMap:
-    #loading file
+    # loading file
     def __init__(self, filename):
         tm = pytmx.load_pygame(filename, pixelalpha=True)
         self.width = tm.width * tm.tilewidth
         self.height = tm.height * tm.tileheight
         self.tmxdata = tm
 
-    
-    #rendering map
+    # rendering map
     def render(self, surface):
         ti = self.tmxdata.get_tile_image_by_gid
         for layer in self.tmxdata.visible_layers:
@@ -33,8 +31,8 @@ class TiledMap:
                     tile = ti(gid)
                     if tile:
                         surface.blit(tile, (x * self.tmxdata.tilewidth, y * self.tmxdata.tilewidth))
-    
+
     def make_map(self):
         temp_surface = pg.Surface((self.width, self.height))
         self.render(temp_surface)
-        return temp_surface                    
+        return temp_surface
