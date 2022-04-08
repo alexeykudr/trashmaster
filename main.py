@@ -1,3 +1,4 @@
+from calendar import c
 import pygame as pg
 import sys
 from os import path
@@ -9,6 +10,7 @@ from map import *
 from sprites import *
 from settings import *
 from SearchBfs import *
+import math
 
 
 class Game():
@@ -104,6 +106,10 @@ class Game():
                     self.quit()
                 if event.key == pg.K_h:
                     self.draw_debug = not self.draw_debug
+            if event.type == pygame.MOUSEBUTTONUP:
+                pos = pygame.mouse.get_pos()
+                clicked_coords = [math.floor(pos[0] / TILESIZE), math.floor(pos[1] / TILESIZE)]
+                print(clicked_coords)
 
     def show_start_screen(self):
         pass
