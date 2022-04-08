@@ -7,7 +7,7 @@ def getTiles():
     array = map_utils.generateMap()
     pattern = map_pattern.getPattern()
     tiles = map_utils.getSprites(array, pattern)
-    return tiles
+    return tiles, array
 
 def renderTiles(tiles, screen, camera, debug=False):
     for tile in tiles:

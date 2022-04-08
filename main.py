@@ -39,8 +39,8 @@ class Game():
     def new(self):
         # initialize all variables and do all the setup for a new game
 
-        # sprite groups
-        self.roadTiles, self.wallTiles = map_new.getTiles()
+        # sprite groups and map array
+        (self.roadTiles, self.wallTiles), self.mapArray = map_new.getTiles()
 
         self.all_sprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
