@@ -2,6 +2,8 @@ from calendar import c
 import pygame as pg
 import sys
 from os import path
+
+import SearchBfs
 from map import *
 # from agent import trashmaster
 # from house import House
@@ -9,17 +11,19 @@ from sprites import *
 from settings import *
 from map_new import map_new
 from map_new import map_utils
+from SearchBfs import *
 import math
 
+
 class Game():
-    
+
     def __init__(self):
         pg.init()
         self.screen = pg.display.set_mode((WIDTH, HEIGHT))
         pg.display.set_caption("Trashmaster")
         self.clock = pg.time.Clock()
         self.load_data()
-    
+
     def load_data(self):
         game_folder = path.dirname(__file__)
         img_folder = path.join(game_folder, 'resources/textures')
@@ -28,8 +32,8 @@ class Game():
         self.map_img = self.map.make_map()
         self.map_rect = self.map_img.get_rect()
 
-        self.player_img = pg.image.load(path.join(img_folder,PLAYER_IMG)).convert_alpha()
-        self.player_img = pg.transform.scale(self.player_img, (PLAYER_WIDTH,PLAYER_HEIGHT) )
+        self.player_img = pg.image.load(path.join(img_folder, PLAYER_IMG)).convert_alpha()
+        self.player_img = pg.transform.scale(self.player_img, (PLAYER_WIDTH, PLAYER_HEIGHT))
         self.wall_img = pg.image.load(path.join(img_folder, WALL_IMG)).convert_alpha()
         self.wall_img = pg.transform.scale(self.wall_img, (TILESIZE, TILESIZE))
 
@@ -55,6 +59,8 @@ class Game():
         self.draw_debug = False
         
 
+        # self.screen.blit(self.map_img, self.camera.apply_rect(self.map_rect))
+
     def run(self):
         # game loop - set self.playing = False to end the game 
         self.playing = True
@@ -63,7 +69,7 @@ class Game():
             self.events()
             self.update()
             self.draw()
-    
+
     def quit(self):
         pg.quit()
         sys.exit()
@@ -73,7 +79,7 @@ class Game():
         self.all_sprites.update()
         self.camera.update(self.player)
         # pygame.display.update()
-    
+
     def draw_grid(self):
         for x in range(0, WIDTH, TILESIZE):
             pg.draw.line(self.screen, LIGHTGREY, (x, 0), (x, HEIGHT))
@@ -116,7 +122,7 @@ class Game():
 # def main():
 #     game = WalleGame()
 #     game.update_window()
-    
+
 #     smieciara_object = trashmaster(16,16,"./resources/textures/garbagetruck/trashmaster_blu.png")
 #     game.draw_object(smieciara_object, (100, 100))
 
@@ -127,7 +133,7 @@ class Game():
 #     game.update_window()
 
 #     running = True
-    
+
 #     while running:
 #         for event in pygame.event.get():
 #             if event.type == pygame.QUIT:
@@ -135,19 +141,21 @@ class Game():
 #             if event.type == pygame.KEYDOWN:
 #                 game.reloadMap()
 #                 game.draw_object(smieciara_object, smieciara_object.movement(event.key, 16))
-                
+
 #                 game.update_window()
 
 #     pygame.quit()
 # if __name__ == '__main__':
 #     main()
 
-
+start_node = (0, 0)
+target_node = (2, 2)
+find_path = BreadthSearchAlgorithm(start_node, target_node)
 # create the game object
 g = Game()
 g.show_start_screen()
 while True:
     g.new()
+    path_found = find_path.bfs()
     g.run()
     g.show_go_screen()
-
