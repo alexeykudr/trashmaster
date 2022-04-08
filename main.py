@@ -39,6 +39,7 @@ class Game():
     def new(self):
         # initialize all variables and do all the setup for a new game
 
+        # sprite groups
         self.roadTiles, self.wallTiles = map_new.getTiles()
 
         self.all_sprites = pg.sprite.Group()
@@ -50,7 +51,7 @@ class Game():
             if tile_object.name == 'wall':
                 Obstacle(self, tile_object.x, tile_object.y, tile_object.width, tile_object.height)
 
-        self.camera = Camera(self.map.width, self.map.height)
+        self.camera = Camera(MAP_WIDTH_PX, MAP_HEIGHT_PX)
         self.draw_debug = False
         
 
@@ -81,7 +82,7 @@ class Game():
 
     def draw(self):
         pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
-        # self.screen.blit(self.new_surface, self.camera.apply_rect(self.map_rect))
+
         map_new.renderTiles(self.roadTiles, self.screen, self.camera)
         map_new.renderTiles(self.wallTiles, self.screen, self.camera, self.draw_debug)
         
@@ -89,9 +90,6 @@ class Game():
             self.screen.blit(sprite.image, self.camera.apply(sprite))
             if self.draw_debug:
                 pg.draw.rect(self.screen, CYAN, self.camera.apply_rect(sprite.hit_rect), 1)
-        # if self.draw_debug:
-        #     for wall in self.walls:
-        #         pg.draw.rect(self.screen, CYAN, self.camera.apply_rect(wall.rect), 1)
         
         pg.display.flip()
 

@@ -3,14 +3,8 @@ from map_new import map_pattern
 import pygame as pg
 from settings import *
 
-# def getMap():
-#     array = map_utils.getBlankMapArray()
-#     pattern = map_pattern.getPattern()
-#     surface = map_utils.makeSurfaceMap(array, pattern)
-#     return surface
-
 def getTiles():
-    array = map_utils.getBlankMapArray()
+    array = map_utils.generateMap()
     pattern = map_pattern.getPattern()
     tiles = map_utils.getSprites(array, pattern)
     return tiles
