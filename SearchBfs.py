@@ -6,21 +6,25 @@ class BreadthSearchAlgorithm:
 
     def bfs(self):
         print("It's showtime")
-        can_go = [self.start]
+        can_go = [[self.start, 0]]
         visited = []
+        visitedPrint = []
         if self.start == self.target:
             print("Start = Target")
             return -1
         while can_go != []:
             node = can_go.pop(0)
-            if node not in visited:
-                visited.append(node)
-                if node == self.target:
+            if node[0] not in visited:
+                visited.append(node[0])
+                visitedPrint.append(node)
+                if node[0] == self.target:
+                    print('final')
+                    print(visitedPrint)
                     return visited
-                neighbours = self.graph.get(node, [])
+                neighbours = self.graph.get(node[0], [])
                 for neighbour in neighbours:
-                    can_go.append(neighbour)
-            print(visited)
+                    can_go.append([neighbour, node[0]])
+            # print(visited)
         return -1
 
     def getData(self):

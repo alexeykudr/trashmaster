@@ -145,8 +145,8 @@ class Game():
 # if __name__ == '__main__':
 #     main()
 
-start_node = (0, 2)
-target_node = (5, 3)
+start_node = (0, 0)
+target_node = (2, 2)
 find_path = BreadthSearchAlgorithm(start_node, target_node)
 # create the game object
 g = Game()
