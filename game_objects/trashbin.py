@@ -1,6 +1,6 @@
-import pygame.image
+import pygame as pg
 
-class trashbin(pygame.sprite.Sprite):
+class trashbin(pg.sprite.Sprite):
     
     def __init__(self,x,y,img, type):
         super().__init__()
@@ -24,6 +24,6 @@ class trashbin(pygame.sprite.Sprite):
         self.y = y
     
         # load trashbin image
-        self.image = pygame.image.load(img)
-        self.image = pygame.transform.scale(self.image, (self.x,self.y))
+        self.image = pg.image.load(img)
+        self.image = pg.transform.scale(self.image, (self.x,self.y))
         self.rect = self.image.get_rect()

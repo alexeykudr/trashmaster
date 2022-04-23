@@ -7,11 +7,11 @@ TEXTURES_DIR = HERE_DIR.rpartition(os.sep)[0]+"\\resources\\textures"
 ROAD_DIR = TEXTURES_DIR+"\\road\\"
 BUILDING_DIR = TEXTURES_DIR+"\\buliding\\"
 
-def loadImg(path):
+def load_img(path):
     return pg.image.load(path)
 
-def getPattern():
+def get_pattern():
     return {
-        0: loadImg(ROAD_DIR+"GTA2_TILE_257.bmp"),
-        1: loadImg(BUILDING_DIR+"GTA2_TILE_187.bmp"),
+        0: load_img(ROAD_DIR+"GTA2_TILE_257.bmp"),
+        1: load_img(BUILDING_DIR+"GTA2_TILE_187.bmp"),
     }

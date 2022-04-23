@@ -1,6 +1,6 @@
-import pygame.image
+import pygame as pg
 
-class Dump(pygame.sprite.Sprite):
+class Dump(pg.sprite.Sprite):
     # wysypisko
     def __init__(self):
         super().__init__()   
@@ -8,7 +8,3 @@ class Dump(pygame.sprite.Sprite):
         self.paper = []
         self.bio = []
         self.other_trash = []
-
-
-
-

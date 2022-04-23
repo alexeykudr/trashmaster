@@ -1,6 +1,6 @@
 class BreadthSearchAlgorithm:
-    def __init__(self, start, target):
-        self.graph = self.getData()
+    def __init__(self, start, target, mapArray):
+        self.graph = self.getData(mapArray)
         self.start = start
         self.target = target
 
@@ -18,20 +18,21 @@ class BreadthSearchAlgorithm:
                 visited.append(node[0])
                 visitedPrint.append(node)
                 if node[0] == self.target:
-                    print('final')
-                    print(visitedPrint)
-                    return visited
+                    # print('final')
+                    # print(visitedPrint)
+                    return visitedPrint
                 neighbours = self.graph.get(node[0], [])
                 for neighbour in neighbours:
                     can_go.append([neighbour, node[0]])
             # print(visited)
         return -1
 
-    def getData(self):
+    def getData(self, mapArray):
         with open("data.txt", "r") as f:
-            matrix = [
-                [int(x) for x in line.split(",") if x != "\n"] for line in f.readlines()
-            ]
+            # matrix = [
+            #     [int(x) for x in line.split(",") if x != "\n"] for line in f.readlines()
+            # ]
+            matrix = mapArray
         adj = {}
         for yi, yvalue in enumerate(matrix):
             for xi, xvalue in enumerate(matrix):
