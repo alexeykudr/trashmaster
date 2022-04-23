@@ -3,15 +3,19 @@ from game_objects.player import Player
 import pygame as pg
 import sys
 from os import path
+
+from map import *
 # from agent import trashmaster
 # from house import House
 from settings import *
 from map import map
 from map import map_utils
+from SearchBfs import *
 import math
 
+
 class Game():
-    
+
     def __init__(self):
         pg.init()
         self.clock = pg.time.Clock()
@@ -19,12 +23,13 @@ class Game():
         pg.display.set_caption("Trashmaster")
         self.load_data()
         self.init_game()
+        self.init_bfs()
 
     def init_game(self):
         # initialize all variables and do all the setup for a new game
 
-        # sprite groups
-        self.roadTiles, self.wallTiles = map.get_tiles()
+        # sprite groups and map array for calculations
+        (self.roadTiles, self.wallTiles), self.mapArray = map.get_tiles()
         self.agentSprites = pg.sprite.Group()
 
         # player obj
@@ -35,6 +40,21 @@ class Game():
 
         # other
         self.draw_debug = False
+
+    def init_bfs(self):
+        start_node = (0, 0)
+        target_node = (18, 18)
+        find_path = BreadthSearchAlgorithm(start_node, target_node, self.mapArray)
+        path = find_path.bfs()
+        # print(path)
+        realPath = []
+        nextNode = target_node
+        for i in range(len(path)-1, 0, -1):
+            node = path[i]
+            if node[0] == nextNode:
+                realPath.insert(0, node[0])
+                nextNode = node[1]
+        print(realPath)
 
     def load_data(self):
         game_folder = path.dirname(__file__)
@@ -51,7 +71,7 @@ class Game():
             self.events()
             self.update()
             self.draw()
-    
+
     def quit(self):
         pg.quit()
         sys.exit()
@@ -105,4 +125,3 @@ g.show_start_screen()
 while True:
     g.run()
     g.show_go_screen()
-
