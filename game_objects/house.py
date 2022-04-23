@@ -24,6 +24,3 @@ class House(pygame.sprite.Sprite):
         files = os.listdir(self.base_path)
         value = randint(0, len(files)-1)
         return files[value]
-
-
-

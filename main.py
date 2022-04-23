@@ -1,60 +1,48 @@
 from calendar import c
+from game_objects.player import Player
 import pygame as pg
 import sys
 from os import path
-from map import *
 # from agent import trashmaster
 # from house import House
-from sprites import *
 from settings import *
-from map_new import map_new
-from map_new import map_utils
+from map import map
+from map import map_utils
 import math
 
 class Game():
     
     def __init__(self):
         pg.init()
+        self.clock = pg.time.Clock()
         self.screen = pg.display.set_mode((WIDTH, HEIGHT))
         pg.display.set_caption("Trashmaster")
-        self.clock = pg.time.Clock()
         self.load_data()
-    
-    def load_data(self):
-        game_folder = path.dirname(__file__)
-        img_folder = path.join(game_folder, 'resources/textures')
-        map_folder = path.join(img_folder, 'map')
-        self.map = TiledMap(path.join(map_folder, 'roads.tmx'))
-        self.map_img = self.map.make_map()
-        self.map_rect = self.map_img.get_rect()
+        self.init_game()
 
-        self.player_img = pg.image.load(path.join(img_folder,PLAYER_IMG)).convert_alpha()
-        self.player_img = pg.transform.scale(self.player_img, (PLAYER_WIDTH,PLAYER_HEIGHT) )
-        self.wall_img = pg.image.load(path.join(img_folder, WALL_IMG)).convert_alpha()
-        self.wall_img = pg.transform.scale(self.wall_img, (TILESIZE, TILESIZE))
-
-        # self.new_map = map_new.getMap()
-        
-
-    def new(self):
+    def init_game(self):
         # initialize all variables and do all the setup for a new game
 
         # sprite groups
-        self.roadTiles, self.wallTiles = map_new.getTiles()
+        self.roadTiles, self.wallTiles = map.get_tiles()
+        self.agentSprites = pg.sprite.Group()
 
-        self.all_sprites = pg.sprite.Group()
-        self.walls = pg.sprite.Group()
+        # player obj
+        self.player = Player(self, 32, 100)
 
-        for tile_object in self.map.tmxdata.objects:
-            if tile_object.name == 'player':
-                self.player = Player(self, tile_object.x, tile_object.y)
-            if tile_object.name == 'wall':
-                Obstacle(self, tile_object.x, tile_object.y, tile_object.width, tile_object.height)
+        # camera obj
+        self.camera = map_utils.Camera(MAP_WIDTH_PX, MAP_HEIGHT_PX)
 
-        self.camera = Camera(MAP_WIDTH_PX, MAP_HEIGHT_PX)
+        # other
         self.draw_debug = False
-        
 
+    def load_data(self):
+        game_folder = path.dirname(__file__)
+        img_folder = path.join(game_folder, 'resources/textures')
+
+        self.player_img = pg.image.load(path.join(img_folder,PLAYER_IMG)).convert_alpha()
+        self.player_img = pg.transform.scale(self.player_img, (PLAYER_WIDTH,PLAYER_HEIGHT) )
+        
     def run(self):
         # game loop - set self.playing = False to end the game 
         self.playing = True
@@ -70,27 +58,25 @@ class Game():
 
     def update(self):
         # update portion of the game loop
-        self.all_sprites.update()
+        self.agentSprites.update()
         self.camera.update(self.player)
         # pygame.display.update()
-    
-    def draw_grid(self):
-        for x in range(0, WIDTH, TILESIZE):
-            pg.draw.line(self.screen, LIGHTGREY, (x, 0), (x, HEIGHT))
-        for y in range(0, HEIGHT, TILESIZE):
-            pg.draw.line(self.screen, LIGHTGREY, (0, y), (WIDTH, y))
 
     def draw(self):
+        #display fps as window title
         pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
 
-        map_new.renderTiles(self.roadTiles, self.screen, self.camera)
-        map_new.renderTiles(self.wallTiles, self.screen, self.camera, self.draw_debug)
-        
-        for sprite in self.all_sprites:
+        #rerender map
+        map.render_tiles(self.roadTiles, self.screen, self.camera)
+        map.render_tiles(self.wallTiles, self.screen, self.camera, self.draw_debug)
+
+        #rerender additional sprites
+        for sprite in self.agentSprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
             if self.draw_debug:
                 pg.draw.rect(self.screen, CYAN, self.camera.apply_rect(sprite.hit_rect), 1)
         
+        #finally update screen
         pg.display.flip()
 
     def events(self):
@@ -102,8 +88,8 @@ class Game():
                     self.quit()
                 if event.key == pg.K_h:
                     self.draw_debug = not self.draw_debug
-            if event.type == pygame.MOUSEBUTTONUP:
-                pos = pygame.mouse.get_pos()
+            if event.type == pg.MOUSEBUTTONUP:
+                pos = pg.mouse.get_pos()
                 clicked_coords = [math.floor(pos[0] / TILESIZE), math.floor(pos[1] / TILESIZE)]
                 print(clicked_coords)
 
@@ -112,42 +98,11 @@ class Game():
 
     def show_go_screen(self):
         pass
-        
-# def main():
-#     game = WalleGame()
-#     game.update_window()
-    
-#     smieciara_object = trashmaster(16,16,"./resources/textures/garbagetruck/trashmaster_blu.png")
-#     game.draw_object(smieciara_object, (100, 100))
-
-#     #house_object = House(20, 20)
-#     # Test draw house object
-#     #game.draw_object(house_object, (20,20))
-
-#     game.update_window()
-
-#     running = True
-    
-#     while running:
-#         for event in pygame.event.get():
-#             if event.type == pygame.QUIT:
-#                 running = False
-#             if event.type == pygame.KEYDOWN:
-#                 game.reloadMap()
-#                 game.draw_object(smieciara_object, smieciara_object.movement(event.key, 16))
-                
-#                 game.update_window()
-
-#     pygame.quit()
-# if __name__ == '__main__':
-#     main()
-
 
 # create the game object
 g = Game()
 g.show_start_screen()
 while True:
-    g.new()
     g.run()
     g.show_go_screen()
 
