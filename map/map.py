@@ -4,7 +4,18 @@ import pygame as pg
 from settings import *
 
 def get_tiles():
-    array = map_utils.generate_map()
+    # array = map_utils.generate_map()
+    array = map_utils.get_blank_map_array()
+
+    array[1][1] = 1
+    array[1][2] = 1
+    array[1][3] = 1
+    array[1][4] = 1
+    array[1][5] = 1
+    array[1][6] = 1
+
+    array[2][5] = 1
+
     pattern = map_pattern.get_pattern()
     tiles = map_utils.get_sprites(array, pattern)
     return tiles, array

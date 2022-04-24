@@ -3,15 +3,14 @@ from game_objects.player import Player
 import pygame as pg
 import sys
 from os import path
+import math
 
 from map import *
-# from agent import trashmaster
-# from house import House
 from settings import *
 from map import map
 from map import map_utils
-from SearchBfs import *
-import math
+from path_search_algorthms import bfs
+from path_search_algorthms import a_star
 
 
 class Game():
@@ -23,7 +22,8 @@ class Game():
         pg.display.set_caption("Trashmaster")
         self.load_data()
         self.init_game()
-        self.init_bfs()
+        # self.init_bfs()
+        self.init_a_star()
 
     def init_game(self):
         # initialize all variables and do all the setup for a new game
@@ -39,12 +39,12 @@ class Game():
         self.camera = map_utils.Camera(MAP_WIDTH_PX, MAP_HEIGHT_PX)
 
         # other
-        self.draw_debug = False
+        self.debug_mode = False
 
     def init_bfs(self):
         start_node = (0, 0)
         target_node = (18, 18)
-        find_path = BreadthSearchAlgorithm(start_node, target_node, self.mapArray)
+        find_path = bfs.BreadthSearchAlgorithm(start_node, target_node, self.mapArray)
         path = find_path.bfs()
         # print(path)
         realPath = []
@@ -55,6 +55,15 @@ class Game():
                 realPath.insert(0, node[0])
                 nextNode = node[1]
         print(realPath)
+
+    def init_a_star(self):
+        # szukanie sciezki na sztywno i wyprintowanie wyniku (tablica stringow)
+        start_x = 0
+        start_y = 0
+        target_x = 6
+        target_y = 2
+        path = a_star.search_path(start_x, start_y, target_x, target_y, self.mapArray)
+        print(path)
 
     def load_data(self):
         game_folder = path.dirname(__file__)
@@ -88,12 +97,12 @@ class Game():
 
         #rerender map
         map.render_tiles(self.roadTiles, self.screen, self.camera)
-        map.render_tiles(self.wallTiles, self.screen, self.camera, self.draw_debug)
+        map.render_tiles(self.wallTiles, self.screen, self.camera, self.debug_mode)
 
         #rerender additional sprites
         for sprite in self.agentSprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
-            if self.draw_debug:
+            if self.debug_mode:
                 pg.draw.rect(self.screen, CYAN, self.camera.apply_rect(sprite.hit_rect), 1)
         
         #finally update screen
@@ -107,7 +116,7 @@ class Game():
                 if event.key == pg.K_ESCAPE:
                     self.quit()
                 if event.key == pg.K_h:
-                    self.draw_debug = not self.draw_debug
+                    self.debug_mode = not self.debug_mode
             if event.type == pg.MOUSEBUTTONUP:
                 pos = pg.mouse.get_pos()
                 clicked_coords = [math.floor(pos[0] / TILESIZE), math.floor(pos[1] / TILESIZE)]
