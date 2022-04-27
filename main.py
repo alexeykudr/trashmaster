@@ -79,8 +79,10 @@ class Game():
         # game loop - set self.playing = False to end the game 
         self.playing = True
 
+        actions = ['right', 'straight', 'straight', 'left', 'straight'
+                   ]
         t = aiPlayer.aiPlayer(self.player, game=self)
-        t.startAiController()
+        t.startAiController(actions=actions)
         
         while self.playing:
             self.dt = self.clock.tick(FPS) / 1000.0 

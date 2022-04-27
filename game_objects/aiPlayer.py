@@ -34,9 +34,8 @@ class aiPlayer():
         self.player.rot += 90
         self.angle += 90
 
-    def startAiController(self):
-        actions = ['right', 'straight', 'straight', 'left', 'straight'
-                   ]
+    def startAiController(self, actions):
+        
         for action in actions:
             if action == 'straight':
                 self.moveAiPlayer()
