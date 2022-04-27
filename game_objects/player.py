@@ -45,3 +45,8 @@ class Player(pg.sprite.Sprite):
         self.hit_rect.centery = self.pos.y
         utils.collide_with_walls(self, self.game.wallTiles, 'y')
         self.rect.center = self.hit_rect.center
+
+        
+    def get_actual_coords(self):
+        # return (self.rect.x / 64, self.rect.y / 64)
+        return (self.rect.x, self.rect.y)
