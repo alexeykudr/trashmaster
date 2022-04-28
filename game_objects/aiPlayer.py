@@ -22,7 +22,7 @@ class aiPlayer():
             self.game.update()
             self.player.update()
             self.game.draw()
-            print(self.player.get_actual_coords())
+            # print(self.player.get_actual_coords())
             
             
 
@@ -37,7 +37,7 @@ class aiPlayer():
     def startAiController(self, actions):
         
         for action in actions:
-            if action == 'straight':
+            if action == 'forward':
                 self.moveAiPlayer()
                 print(f'ROT IS {self.player.rot}')
             if action == 'right':

@@ -9,7 +9,7 @@ from settings import *
 from map import map
 from map import map_utils
 from path_search_algorthms import bfs
-# from path_search_algorthms import a_star
+from path_search_algorthms import a_star
 
 
 from game_objects import aiPlayer
@@ -24,7 +24,7 @@ class Game():
         self.init_game()
         # because dont work without data.txt
         # self.init_bfs()
-        # self.init_a_star()
+        self.init_a_star()
 
         self.dt = self.clock.tick(FPS) / 1000.0
 
@@ -36,7 +36,7 @@ class Game():
         self.agentSprites = pg.sprite.Group()
 
         # player obj
-        self.player = Player(self, 32, 100)
+        self.player = Player(self, 32, 32)
 
         # camera obj
         self.camera = map_utils.Camera(MAP_WIDTH_PX, MAP_HEIGHT_PX)
@@ -79,11 +79,6 @@ class Game():
         # game loop - set self.playing = False to end the game 
         self.playing = True
 
-        actions = ['right', 'straight', 'straight', 'left', 'straight'
-                   ]
-        t = aiPlayer.aiPlayer(self.player, game=self)
-        t.startAiController(actions=actions)
-        
         while self.playing:
             self.dt = self.clock.tick(FPS) / 1000.0 
             self.events()
@@ -129,7 +124,10 @@ class Game():
             if event.type == pg.MOUSEBUTTONUP:
                 pos = pg.mouse.get_pos()
                 clicked_coords = [math.floor(pos[0] / TILESIZE), math.floor(pos[1] / TILESIZE)]
-                print(clicked_coords)
+                actions = a_star.search_path(math.floor(self.player.pos[0] / TILESIZE), math.floor(self.player.pos[1] / TILESIZE), clicked_coords[0], clicked_coords[1], self.mapArray)
+                print(actions)
+                t = aiPlayer.aiPlayer(self.player, game=self)
+                t.startAiController(actions=actions)
 
     def show_start_screen(self):
         pass
