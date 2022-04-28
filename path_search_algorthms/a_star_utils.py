@@ -75,7 +75,7 @@ def get_move(start_node: Node, target_node: Node) -> list[str]:
         return ["forward"]
     if (abs(rotate_change) == 2):
         return ["right", "right", "forward"]
-    if (rotate_change < 0 or rotate_change == 3):
+    if (rotate_change == -1 or rotate_change == 3):
         return ["right", "forward"]
     else:
         return ["left", "forward"]

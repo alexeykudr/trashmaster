@@ -9,7 +9,7 @@ from settings import *
 from map import map
 from map import map_utils
 from path_search_algorthms import bfs
-from path_search_algorthms import a_star
+from path_search_algorthms import a_star, a_star_utils
 
 
 from game_objects import aiPlayer
@@ -124,10 +124,10 @@ class Game():
             if event.type == pg.MOUSEBUTTONUP:
                 pos = pg.mouse.get_pos()
                 clicked_coords = [math.floor(pos[0] / TILESIZE), math.floor(pos[1] / TILESIZE)]
-                actions = a_star.search_path(math.floor(self.player.pos[0] / TILESIZE), math.floor(self.player.pos[1] / TILESIZE), clicked_coords[0], clicked_coords[1], self.mapArray)
+                actions = a_star.search_path(math.floor(self.player.pos[0] / TILESIZE), math.floor(self.player.pos[1] / TILESIZE), self.player.rotation(), clicked_coords[0], clicked_coords[1], self.mapArray)
                 print(actions)
                 t = aiPlayer.aiPlayer(self.player, game=self)
-                t.startAiController(actions=actions)
+                t.startAiController(actions)
 
     def show_start_screen(self):
         pass

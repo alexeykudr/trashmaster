@@ -1,3 +1,4 @@
+from path_search_algorthms import a_star_utils
 import pygame as pg
 from settings import *
 from game_objects import utils
@@ -17,6 +18,21 @@ class Player(pg.sprite.Sprite):
         self.vel = vec(0, 0)
         self.pos = vec(x, y)
         self.rot = 0
+        self.__rotation = a_star_utils.Rotation.RIGHT
+
+    def rotation(self) -> a_star_utils.Rotation:
+        return self.__rotation
+
+    def set_rotation(self, rotation):
+        self.__rotation = rotation
+        if (rotation == a_star_utils.Rotation.UP or rotation == int(a_star_utils.Rotation.UP)):
+            self.rot = 90
+        elif (rotation == a_star_utils.Rotation.RIGHT or rotation == int(a_star_utils.Rotation.RIGHT)):
+            self.rot = 0
+        elif (rotation == a_star_utils.Rotation.DOWN or rotation == int(a_star_utils.Rotation.DOWN)):
+            self.rot = 270
+        elif (rotation == a_star_utils.Rotation.LEFT or rotation == int(a_star_utils.Rotation.LEFT)):
+            self.rot = 180
         
 
     def get_keys(self):

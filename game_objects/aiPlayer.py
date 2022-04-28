@@ -1,3 +1,4 @@
+from game_objects.player import Player
 import pygame as pg
 import math
 from settings import *
@@ -5,15 +6,8 @@ vec = pg.math.Vector2
 
 class aiPlayer():
     def __init__(self, player, game):
-        self.player = player
+        self.player : Player = player
         self.game = game
-
-    def rotateAiPlayer(self, d: str):
-        if d == 'left':
-            print('in left')
-            self.direction -= 90
-        if d == 'right':
-            self.direction += 90
 
     def moveAiPlayer(self):
         for i in range(64 * 1):
@@ -28,10 +22,16 @@ class aiPlayer():
             
 
     def turn_left(self):
-        self.player.rot -= 90
+        change = int(self.player.rotation()) - 1
+        if(change == -1):
+            change = 3
+        self.player.set_rotation(change)
 
     def turn_right(self):
-        self.player.rot += 90
+        change = int(self.player.rotation()) + 1
+        if(change == 4):
+            change = 0
+        self.player.set_rotation(change)
 
     def startAiController(self, actions):
         for action in actions:
