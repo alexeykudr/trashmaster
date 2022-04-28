@@ -12,6 +12,6 @@ def load_img(path):
 
 def get_pattern():
     return {
-        0: load_img(ROAD_DIR+"GTA2_TILE_257.bmp"),
-        1: load_img(BUILDING_DIR+"GTA2_TILE_187.bmp"),
+        0: load_img("resources/textures/road/GTA2_TILE_257.bmp"),
+        1: load_img("resources/textures/buliding/GTA2_TILE_187.bmp"),
     }
