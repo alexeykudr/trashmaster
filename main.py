@@ -24,7 +24,7 @@ class Game():
         self.init_game()
         # because dont work without data.txt
         # self.init_bfs()
-        self.init_a_star()
+        # self.init_a_star()
 
         self.dt = self.clock.tick(FPS) / 1000.0
 
