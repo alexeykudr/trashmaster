@@ -123,7 +123,8 @@ class Game():
                     self.debug_mode = not self.debug_mode
             if event.type == pg.MOUSEBUTTONUP:
                 pos = pg.mouse.get_pos()
-                clicked_coords = [math.floor(pos[0] / TILESIZE), math.floor(pos[1] / TILESIZE)]
+                offset_x, offset_y = self.camera.offset()
+                clicked_coords = [math.floor(pos[0] / TILESIZE) - offset_x, math.floor(pos[1] / TILESIZE) - offset_y]
                 actions = a_star.search_path(math.floor(self.player.pos[0] / TILESIZE), math.floor(self.player.pos[1] / TILESIZE), self.player.rotation(), clicked_coords[0], clicked_coords[1], self.mapArray)
                 print(actions)
                 t = aiPlayer.aiPlayer(self.player, game=self)

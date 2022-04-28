@@ -18,8 +18,6 @@ class aiPlayer():
             self.player.update()
             self.game.draw()
             # print(self.player.get_actual_coords())
-            
-            
 
     def turn_left(self):
         change = int(self.player.rotation()) - 1
@@ -42,5 +40,5 @@ class aiPlayer():
                 self.turn_right()
             if action == 'left':
                 self.turn_left()
-        print(f'ROT: {self.player.rot}')
-        print("Agent pos: ", math.floor(self.player.pos[0] / TILESIZE), math.floor(self.player.pos[1] / TILESIZE))
+        # print(f'ROT: {self.player.rot}')
+        # print("Agent pos: ", math.floor(self.player.pos[0] / TILESIZE), math.floor(self.player.pos[1] / TILESIZE))

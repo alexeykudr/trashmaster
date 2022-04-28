@@ -47,6 +47,10 @@ class Camera:
 
     def apply_rect(self, rect):
          return rect.move(self.camera.topleft)
+
+    def offset(self):
+        x, y = self.camera.topleft
+        return x//TILE_SIZE_PX, y//TILE_SIZE_PX
     
     def update(self,target):
         x = -target.rect.x + int(WIDTH/2)
