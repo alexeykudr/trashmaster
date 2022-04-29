@@ -26,7 +26,7 @@ class Node:
     def f_cost(self):
         return self.g_cost + self.h_cost
 
-def get_neighbours(node: Node, searched_list: list[Node], array: list[list[int]]) -> list[Node]:
+def get_neighbours(node: 'Node', searched_list: list['Node'], array: list[list[int]]) -> list['Node']:
     neighbours = []
     for offset_x in range (-1, 2):
         for offset_y in range (-1, 2):
@@ -35,7 +35,7 @@ def get_neighbours(node: Node, searched_list: list[Node], array: list[list[int]]
                 x = node.x + offset_x
                 y = node.y + offset_y
                 # prevent out of map coords
-                if (x >= 0 and x <= MAP_WIDTH and y >= 0 and y <= MAP_HEIGHT):
+                if (x >= 0 and x < MAP_WIDTH and y >= 0 and y < MAP_HEIGHT):
                     if(array[y][x] == ROAD_TILE and (x, y) not in searched_list):
                         neighbour = Node(x, y, Rotation.NONE)
                         neighbour.rotation = get_needed_rotation(node, neighbour)

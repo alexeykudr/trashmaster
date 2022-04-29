@@ -127,8 +127,9 @@ class Game():
                 clicked_coords = [math.floor(pos[0] / TILESIZE) - offset_x, math.floor(pos[1] / TILESIZE) - offset_y]
                 actions = a_star.search_path(math.floor(self.player.pos[0] / TILESIZE), math.floor(self.player.pos[1] / TILESIZE), self.player.rotation(), clicked_coords[0], clicked_coords[1], self.mapArray)
                 print(actions)
-                t = aiPlayer.aiPlayer(self.player, game=self)
-                t.startAiController(actions)
+                if (actions != None):
+                    t = aiPlayer.aiPlayer(self.player, game=self)
+                    t.startAiController(actions)
 
     def show_start_screen(self):
         pass
