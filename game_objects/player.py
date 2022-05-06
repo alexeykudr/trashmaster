@@ -1,3 +1,4 @@
+from path_search_algorthms import a_star_utils
 import pygame as pg
 from settings import *
 from game_objects import utils
@@ -17,7 +18,21 @@ class Player(pg.sprite.Sprite):
         self.vel = vec(0, 0)
         self.pos = vec(x, y)
         self.rot = 0
-        
+        self.__rotation = a_star_utils.Rotation.RIGHT
+
+    def rotation(self) -> a_star_utils.Rotation:
+        return self.__rotation
+
+    def set_rotation(self, rotation):
+        self.__rotation = rotation
+        if (rotation == a_star_utils.Rotation.UP or rotation == int(a_star_utils.Rotation.UP)):
+            self.rot = -90
+        elif (rotation == a_star_utils.Rotation.RIGHT or rotation == int(a_star_utils.Rotation.RIGHT)):
+            self.rot = 0
+        elif (rotation == a_star_utils.Rotation.DOWN or rotation == int(a_star_utils.Rotation.DOWN)):
+            self.rot = 90
+        elif (rotation == a_star_utils.Rotation.LEFT or rotation == int(a_star_utils.Rotation.LEFT)):
+            self.rot = 180
 
     def get_keys(self):
         self.rot_speed = 0
@@ -35,8 +50,12 @@ class Player(pg.sprite.Sprite):
 
     def update(self):
         self.get_keys()
-        self.rot = (self.rot + self.rot_speed * self.game.dt) % 360
-        self.image = pg.transform.rotate(self.game.player_img, self.rot)
+        # must be fix for manual movement
+        # self.rot = (self.rot + self.rot_speed * self.game.dt) % 360
+        image_rotation = self.rot
+        if(abs(image_rotation) == 90):
+            image_rotation *= -1
+        self.image = pg.transform.rotate(self.game.player_img, image_rotation)
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
         self.pos += self.vel * self.game.dt

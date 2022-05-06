@@ -26,7 +26,7 @@ class Node:
     def f_cost(self):
         return self.g_cost + self.h_cost
 
-def get_neighbours(node: Node, searched_list: list[Node], array: list[list[int]]) -> list[Node]:
+def get_neighbours(node, searched_list, array):
     neighbours = []
     for offset_x in range (-1, 2):
         for offset_y in range (-1, 2):
@@ -35,7 +35,7 @@ def get_neighbours(node: Node, searched_list: list[Node], array: list[list[int]]
                 x = node.x + offset_x
                 y = node.y + offset_y
                 # prevent out of map coords
-                if (x >= 0 and x <= MAP_WIDTH and y >= 0 and y <= MAP_HEIGHT):
+                if (x >= 0 and x < MAP_WIDTH and y >= 0 and y < MAP_HEIGHT):
                     if(array[y][x] == ROAD_TILE and (x, y) not in searched_list):
                         neighbour = Node(x, y, Rotation.NONE)
                         neighbour.rotation = get_needed_rotation(node, neighbour)
@@ -45,7 +45,7 @@ def get_neighbours(node: Node, searched_list: list[Node], array: list[list[int]]
 # move cost schema:
 # - move from tile to tile: 10
 # - add extra 10 (1 rotation) if it exists
-def get_h_cost(start_node: Node, target_node: Node) -> int:
+def get_h_cost(start_node: Node, target_node: Node):
     distance_x = abs(start_node.x - target_node.x)
     distance_y = abs(start_node.y - target_node.y)
     cost = (distance_x + distance_y) * 10
@@ -69,13 +69,13 @@ def get_neighbour_cost(start_node: Node, target_node: Node) -> int:
         return 30
 
 # translate rotation change to move
-def get_move(start_node: Node, target_node: Node) -> list[str]:
+def get_move(start_node: Node, target_node: Node):
     rotate_change = get_rotate_change(start_node.rotation, target_node.rotation)
     if (rotate_change == 0):
         return ["forward"]
     if (abs(rotate_change) == 2):
         return ["right", "right", "forward"]
-    if (rotate_change < 0 or rotate_change == 3):
+    if (rotate_change == -1 or rotate_change == 3):
         return ["right", "forward"]
     else:
         return ["left", "forward"]

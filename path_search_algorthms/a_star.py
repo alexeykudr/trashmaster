@@ -1,9 +1,9 @@
 from data_structures.heap import Heap
 from path_search_algorthms import a_star_utils as utils
 
-def search_path(start_x: int, start_y: int, target_x: int, target_y: int, array: list[list[int]]) -> list[str]:
+def search_path(start_x: int, start_y: int, agent_rotation: utils.Rotation, target_x: int, target_y: int, array):
 
-    start_node = utils.Node(start_x, start_y, utils.Rotation.RIGHT)
+    start_node = utils.Node(start_x, start_y, agent_rotation)
     target_node = utils.Node(target_x, target_y, utils.Rotation.NONE)
 
     # heap version
@@ -84,7 +84,7 @@ def search_path(start_x: int, start_y: int, target_x: int, target_y: int, array:
     #             if(neighbour not in search_list):
     #                 search_list.append(neighbour)
 
-def trace_path(end_node: utils.Node) -> list[str]:
+def trace_path(end_node: utils.Node):
     path = []
     node = end_node
 
