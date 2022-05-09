@@ -19,6 +19,7 @@ class Player(pg.sprite.Sprite):
         self.pos = vec(x, y)
         self.rot = 0
         self.__rotation = a_star_utils.Rotation.RIGHT
+        self.mass = 0
 
     def rotation(self) -> a_star_utils.Rotation:
         return self.__rotation

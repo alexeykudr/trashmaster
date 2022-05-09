@@ -10,9 +10,18 @@ from map import map
 from map import map_utils
 from path_search_algorthms import bfs
 from path_search_algorthms import a_star, a_star_utils
-
+from decision_tree import decisionTree
 
 from game_objects import aiPlayer
+
+
+def printTree():
+    tree = decisionTree.tree()
+    decisionTree.tree_as_txt(tree)
+    decisionTree.tree_to_png(tree)
+    decisionTree.tree_to_structure(tree)
+
+
 class Game():
 
     def __init__(self):
@@ -52,7 +61,7 @@ class Game():
         # print(path)
         realPath = []
         nextNode = target_node
-        for i in range(len(path)-1, 0, -1):
+        for i in range(len(path) - 1, 0, -1):
             node = path[i]
             if node[0] == nextNode:
                 realPath.insert(0, node[0])
@@ -72,15 +81,15 @@ class Game():
         game_folder = path.dirname(__file__)
         img_folder = path.join(game_folder, 'resources/textures')
 
-        self.player_img = pg.image.load(path.join(img_folder,PLAYER_IMG)).convert_alpha()
-        self.player_img = pg.transform.scale(self.player_img, (PLAYER_WIDTH,PLAYER_HEIGHT) )
-        
+        self.player_img = pg.image.load(path.join(img_folder, PLAYER_IMG)).convert_alpha()
+        self.player_img = pg.transform.scale(self.player_img, (PLAYER_WIDTH, PLAYER_HEIGHT))
+
     def run(self):
         # game loop - set self.playing = False to end the game 
         self.playing = True
 
         while self.playing:
-            self.dt = self.clock.tick(FPS) / 1000.0 
+            self.dt = self.clock.tick(FPS) / 1000.0
             self.events()
             self.update()
             self.draw()
@@ -96,20 +105,20 @@ class Game():
         # pygame.display.update()
 
     def draw(self):
-        #display fps as window title
+        # display fps as window title
         pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
 
-        #rerender map
+        # rerender map
         map.render_tiles(self.roadTiles, self.screen, self.camera)
         map.render_tiles(self.wallTiles, self.screen, self.camera, self.debug_mode)
 
-        #rerender additional sprites
+        # rerender additional sprites
         for sprite in self.agentSprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
             if self.debug_mode:
                 pg.draw.rect(self.screen, CYAN, self.camera.apply_rect(sprite.hit_rect), 1)
-        
-        #finally update screen
+
+        # finally update screen
         pg.display.flip()
 
     def events(self):
@@ -125,7 +134,9 @@ class Game():
                 pos = pg.mouse.get_pos()
                 offset_x, offset_y = self.camera.offset()
                 clicked_coords = [math.floor(pos[0] / TILESIZE) - offset_x, math.floor(pos[1] / TILESIZE) - offset_y]
-                actions = a_star.search_path(math.floor(self.player.pos[0] / TILESIZE), math.floor(self.player.pos[1] / TILESIZE), self.player.rotation(), clicked_coords[0], clicked_coords[1], self.mapArray)
+                actions = a_star.search_path(math.floor(self.player.pos[0] / TILESIZE),
+                                             math.floor(self.player.pos[1] / TILESIZE), self.player.rotation(),
+                                             clicked_coords[0], clicked_coords[1], self.mapArray)
                 print(actions)
                 if (actions != None):
                     t = aiPlayer.aiPlayer(self.player, game=self)
@@ -137,11 +148,13 @@ class Game():
     def show_go_screen(self):
         pass
 
+
 # create the game object
 
 if __name__ == "__main__":
     g = Game()
     g.show_start_screen()
+    printTree()
 
     g.run()
     g.show_go_screen()
