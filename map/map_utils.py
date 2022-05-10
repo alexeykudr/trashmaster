@@ -2,6 +2,8 @@ import random
 import pygame as pg
 from settings import *
 from map.tile import Tile
+from map import map_pattern
+from game_objects.trashbin import Trashbin
 
 # tworzenie pustego arraya o podanych wymiarach
 def get_blank_map_array():
@@ -11,16 +13,28 @@ def get_blank_map_array():
 # generowanie obiektow na mapie
 def generate_map():
     map = get_blank_map_array()
+
+    # generowanie scian
     for i in range(0, 20):
         x = random.randint(0, MAP_WIDTH-1)
         y = random.randint(0, MAP_HEIGHT-1)
         map[y][x] = 1
+
+    # generowanie smietnikow
+    for i in range(0, 5):
+        x = random.randint(0, MAP_WIDTH-1)
+        y = random.randint(0, MAP_HEIGHT-1)
+        map[y][x] = 2
+
     return map
 
 # tworzenie grup sprite'ow
 def get_sprites(map, pattern):
     roadTiles = pg.sprite.Group()
     wallTiles = pg.sprite.Group()
+    trashbinTiles = pg.sprite.Group()
+
+    trashbin_pattern = map_pattern.get_trashbin_pattern()
 
     #objechanie tablicy i generowanie tile'a na danych kordach
     for i in range(len(map)):
@@ -28,13 +42,26 @@ def get_sprites(map, pattern):
         for j in range(len(map[i])):
             offsetX = j * TILE_SIZE_PX
             tileId = map[i][j]
-            tile = Tile(pattern[tileId], offsetX, offsetY, TILE_SIZE_PX, TILE_SIZE_PX)
-            if tileId == 0:
+            if tileId == 0 or tileId == 1:
+                tile = Tile(pattern[tileId], offsetX, offsetY, TILE_SIZE_PX, TILE_SIZE_PX)
+                if tileId == 0:
+                    roadTiles.add(tile)
+                else:
+                    wallTiles.add(tile)
+            elif tileId == 2:
+                trashbinId = random.randint(0, 4)
+                tile = Tile(pattern[0], offsetX, offsetY, TILE_SIZE_PX, TILE_SIZE_PX)
+                trashbin = Trashbin(trashbin_pattern[trashbinId], offsetX, offsetY, 32, 30, trashbinId)
                 roadTiles.add(tile)
-            else:
-                wallTiles.add(tile)
+                trashbinTiles.add(trashbin)
 
-    return roadTiles, wallTiles
+    return roadTiles, wallTiles, trashbinTiles
+
+def isRoadTile(tileId: int) -> bool:
+    if tileId == 0 or tileId == 2:
+        return True
+    else:
+        return False
 
 class Camera:
     def __init__(self,width,height):

@@ -1,8 +1,7 @@
 from enum import Enum
 
+from map import map_utils
 from settings import *
-
-ROAD_TILE = 0
 
 class Rotation(Enum):
     UP = 0
@@ -36,7 +35,7 @@ def get_neighbours(node, searched_list, array):
                 y = node.y + offset_y
                 # prevent out of map coords
                 if (x >= 0 and x < MAP_WIDTH and y >= 0 and y < MAP_HEIGHT):
-                    if(array[y][x] == ROAD_TILE and (x, y) not in searched_list):
+                    if(map_utils.isRoadTile(array[y][x]) and (x, y) not in searched_list):
                         neighbour = Node(x, y, Rotation.NONE)
                         neighbour.rotation = get_needed_rotation(node, neighbour)
                         neighbours.append(neighbour)

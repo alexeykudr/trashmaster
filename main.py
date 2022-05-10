@@ -32,7 +32,7 @@ class Game():
         # initialize all variables and do all the setup for a new game
 
         # sprite groups and map array for calculations
-        (self.roadTiles, self.wallTiles), self.mapArray = map.get_tiles()
+        (self.roadTiles, self.wallTiles, self.trashbinTiles), self.mapArray = map.get_tiles()
         self.agentSprites = pg.sprite.Group()
 
         # player obj
@@ -102,6 +102,7 @@ class Game():
         #rerender map
         map.render_tiles(self.roadTiles, self.screen, self.camera)
         map.render_tiles(self.wallTiles, self.screen, self.camera, self.debug_mode)
+        map.render_tiles(self.trashbinTiles, self.screen, self.camera)
 
         #rerender additional sprites
         for sprite in self.agentSprites:

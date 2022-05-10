@@ -10,7 +10,7 @@ class Tile(pg.sprite.Sprite):
         self.width = width
         self.height = height
 
-        self.image = pg.Surface([width, height])
+        self.image = pg.Surface([width, height], pg.SRCALPHA, 32)
         self.image.blit(img, (0,0))
 
         self.rect = pg.Rect(x, y, width, height)
