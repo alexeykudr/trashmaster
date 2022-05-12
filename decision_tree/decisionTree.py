@@ -11,11 +11,10 @@ time_since_flush = [1,2,3,4,5,6,7,8,9,10]
 type_of_trash = {"bio":1, "szklo":2, "plastik":3, "papier":4, "mieszane":5}
 access_to_bin = { "no":1, "yes":2}
 distance = [1,2,3,4,5,6,7,8,9,10]
-decision = [1,2,3,4,5]
+decision = [0,1] - decyzje zostaną zmienione z tych z wagami na zero jedynkowe ze względu na pewne trudności w dalszej pracy
 '''
 decisions = ["decision"]
-attributes = ["season", "enough_space_in_trashmaster", "time_since_flush", "type_of_trash", "access_to_bin", "distance",
-              "decision"]
+attributes = ["season", "enough_space_in_trashmaster", "time_since_flush", "type_of_trash", "access_to_bin", "distance"]
 
 
 # return tree made from attributes
@@ -59,6 +58,10 @@ def tree_to_png(decision_tree):
 
 def tree_to_structure(decision_tree):
     joblib.dump(decision_tree, './decision_tree/tree_model')
+
+
+def tree_from_structure(file):
+    return joblib.load(file)
 
 #drzewo = tree()
 #tree_as_txt(drzewo)

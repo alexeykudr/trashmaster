@@ -20,6 +20,10 @@ def printTree():
     decisionTree.tree_as_txt(tree)
     decisionTree.tree_to_png(tree)
     decisionTree.tree_to_structure(tree)
+    drzewo = decisionTree.tree_from_structure('./decision_tree/tree_model')
+    print("Dla losowych danych predykcja czy wziąć kosz to: ")
+    dec = decisionTree.decision(drzewo, 4, 2, 7, 4, 2, 3)
+    print(dec)
 
 
 class Game():
