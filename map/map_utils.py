@@ -21,12 +21,14 @@ def generate_map():
         map[y][x] = 1
 
     # generowanie smietnikow
-    for i in range(0, 5):
+    for i in range(0, 10):
         x = random.randint(0, MAP_WIDTH-1)
         y = random.randint(0, MAP_HEIGHT-1)
         map[y][x] = 2
 
     return map
+
+trashbins =[]
 
 # tworzenie grup sprite'ow
 def get_sprites(map, pattern):
@@ -54,6 +56,7 @@ def get_sprites(map, pattern):
                 trashbin = Trashbin(trashbin_pattern[trashbinId], offsetX, offsetY, 32, 30, trashbinId)
                 roadTiles.add(tile)
                 trashbinTiles.add(trashbin)
+                trashbins.append(trashbin)
 
     return roadTiles, wallTiles, trashbinTiles
 
