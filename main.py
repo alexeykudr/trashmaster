@@ -1,4 +1,6 @@
+from asyncio import sleep
 from calendar import c
+import time
 from game_objects.player import Player
 import pygame as pg
 import sys
@@ -100,32 +102,31 @@ class Game():
         self.positive_decision = []
         self.negative_decision = []
 
-        self.positive_actions = []
-        self.negative_actions = []
         for i in self.trashbinTiles:
             atrrs_container = i.get_attributes()
             x, y = i.get_coords()
             dec = decisionTree.decision(getTree(), *atrrs_container)
             if dec[0] == 1:
                 self.positive_decision.append(i)
-                self.positive_actions.append(self.get_actions_by_coords(x, y))
             else:
                 self.negative_decision.append(i)
-                self.negative_actions.append(i)
         
-        for i in self.positive_actions:
-            print('----')
-            print(i)
-            print('----')
-
-        # vec = pg.math.Vector2
+        # print('positive actions')
         # for i in self.positive_actions:
-        #     self.t.startAiController(i)
-        #     self.player.update()
-        #     self.player.pos = vec(32, 32)
-        #     self.player.update()  
+        #     print('----')
+        #     print(i)
+        #     print('----')
 
-        self.t.startAiController(self.positive_actions[0])
+        print('positive actions')
+        print(len(self.positive_actions))
+        for i in self.positive_decision:
+            # print(i.get_coords())
+            trash_x, trash_y = i.get_coords()
+            action = self.get_actions_by_coords(trash_x, trash_y)
+            self.t.startAiController(action)
+        # print(self.positive_actions[0])
+
+        # self.t.startAiController(self.positive_actions[0])
         
 
     def load_data(self):
