@@ -9,7 +9,7 @@ attributes = ["season", "trash_type", "mass", "space", "trash_mass"]
 
 # return tree made from attributes
 def tree():
-    dataset = pandas.read_csv('/Users/mac/Desktop/tree_dataset.csv', sep=";")
+    dataset = pandas.read_csv('decision_tree/tree_dataset.csv', sep=";")
 
     x = dataset[attributes]
     y = dataset[decisions]

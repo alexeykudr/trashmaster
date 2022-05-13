@@ -113,17 +113,18 @@ class Game():
                 self.negative_decision.append(i)
                 self.negative_actions.append(i)
         
-        # j = 0
-        # for i in self.positive_actions:
-            
-        #     print(f"step {j} actions is : {i}")
-        #     j+=1
+        for i in self.positive_actions:
+            print('----')
+            print(i)
+            print('----')
 
         # vec = pg.math.Vector2
         # for i in self.positive_actions:
         #     self.t.startAiController(i)
+        #     self.player.update()
         #     self.player.pos = vec(32, 32)
-        
+        #     self.player.update()  
+
         self.t.startAiController(self.positive_actions[0])
         
 
