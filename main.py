@@ -13,17 +13,22 @@ from path_search_algorthms import a_star, a_star_utils
 from decision_tree import decisionTree
 
 from game_objects import aiPlayer
+import itertools
 
 
-def printTree():
+def getTree():
     tree = decisionTree.tree()
     decisionTree.tree_as_txt(tree)
-    decisionTree.tree_to_png(tree)
+    # decisionTree.tree_to_png(tree)
     decisionTree.tree_to_structure(tree)
     drzewo = decisionTree.tree_from_structure('./decision_tree/tree_model')
-    print("Dla losowych danych predykcja czy wziąć kosz to: ")
-    dec = decisionTree.decision(drzewo, 4, 2, 7, 4, 2, 3)
-    print(dec)
+    # print("Dla losowych danych predykcja czy wziąć kosz to: ")
+    # dec = decisionTree.decision(drzewo, *(4,1,1,1))
+    # print('---')
+    # print(f"decision is{dec}")
+    # print('---')
+
+    return drzewo
 
 
 class Game():
@@ -31,6 +36,7 @@ class Game():
     def __init__(self):
         pg.init()
         self.clock = pg.time.Clock()
+        self.dt = self.clock.tick(FPS) / 333.0
         self.screen = pg.display.set_mode((WIDTH, HEIGHT))
         pg.display.set_caption("Trashmaster")
         self.load_data()
@@ -38,8 +44,17 @@ class Game():
         # because dont work without data.txt
         # self.init_bfs()
         # self.init_a_star()
+        self.t = aiPlayer.aiPlayer(self.player, game=self)
 
-        self.dt = self.clock.tick(FPS) / 1000.0
+        
+    def get_actions_by_coords(self,x,y):
+        pos = (x,y)
+        offset_x, offset_y = self.camera.offset()
+        clicked_coords = [math.floor(pos[0] / TILESIZE) - offset_x, math.floor(pos[1] / TILESIZE) - offset_y]
+        actions = a_star.search_path(math.floor(self.player.pos[0] / TILESIZE),
+                                        math.floor(self.player.pos[1] / TILESIZE), self.player.rotation(),
+                                        clicked_coords[0], clicked_coords[1], self.mapArray)
+        return actions
 
     def init_game(self):
         # initialize all variables and do all the setup for a new game
@@ -47,16 +62,15 @@ class Game():
         # sprite groups and map array for calculations
         (self.roadTiles, self.wallTiles, self.trashbinTiles), self.mapArray = map.get_tiles()
         self.agentSprites = pg.sprite.Group()
-
         # player obj
         self.player = Player(self, 32, 32)
-
         # camera obj
         self.camera = map_utils.Camera(MAP_WIDTH_PX, MAP_HEIGHT_PX)
 
         # other
         self.debug_mode = False
 
+        
     def init_bfs(self):
         start_node = (0, 0)
         target_node = (18, 18)
@@ -81,6 +95,38 @@ class Game():
         path = a_star.search_path(start_x, start_y, target_x, target_y, self.mapArray)
         print(path)
 
+    def init_decision_tree(self):
+         # logika pracy z drzewem
+        self.positive_decision = []
+        self.negative_decision = []
+
+        self.positive_actions = []
+        self.negative_actions = []
+        for i in self.trashbinTiles:
+            atrrs_container = i.get_attributes()
+            x, y = i.get_coords()
+            dec = decisionTree.decision(getTree(), *atrrs_container)
+            if dec[0] == 1:
+                self.positive_decision.append(i)
+                self.positive_actions.append(self.get_actions_by_coords(x, y))
+            else:
+                self.negative_decision.append(i)
+                self.negative_actions.append(i)
+        
+        # j = 0
+        # for i in self.positive_actions:
+            
+        #     print(f"step {j} actions is : {i}")
+        #     j+=1
+
+        # vec = pg.math.Vector2
+        # for i in self.positive_actions:
+        #     self.t.startAiController(i)
+        #     self.player.pos = vec(32, 32)
+        
+        self.t.startAiController(self.positive_actions[0])
+        
+
     def load_data(self):
         game_folder = path.dirname(__file__)
         img_folder = path.join(game_folder, 'resources/textures')
@@ -91,7 +137,7 @@ class Game():
     def run(self):
         # game loop - set self.playing = False to end the game 
         self.playing = True
-
+        self.init_decision_tree()
         while self.playing:
             self.dt = self.clock.tick(FPS) / 1000.0
             self.events()
@@ -142,24 +188,17 @@ class Game():
                 actions = a_star.search_path(math.floor(self.player.pos[0] / TILESIZE),
                                              math.floor(self.player.pos[1] / TILESIZE), self.player.rotation(),
                                              clicked_coords[0], clicked_coords[1], self.mapArray)
-                print(actions)
+                # print(actions)
+                
                 if (actions != None):
-                    t = aiPlayer.aiPlayer(self.player, game=self)
-                    t.startAiController(actions)
+                    self.t.startAiController(actions)
 
-    def show_start_screen(self):
-        pass
-
-    def show_go_screen(self):
-        pass
-
+                
 
 # create the game object
 
 if __name__ == "__main__":
     g = Game()
-    g.show_start_screen()
-    printTree()
-
+    
     g.run()
     g.show_go_screen()
