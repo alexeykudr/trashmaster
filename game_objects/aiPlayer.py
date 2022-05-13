@@ -18,6 +18,7 @@ class aiPlayer():
             self.player.update()
             self.game.draw()
             # print(self.player.get_actual_coords())
+        
 
     def turn_left(self):
         change = int(self.player.rotation()) - 1

@@ -13,7 +13,7 @@ class Trashbin(Tile):
         self.trash_type = randrange(5)
         self.mass = randrange(5)
         self.space = randrange(5)
-        self.trash_mass = randrange(5)       
+        self.trash_mass = randrange(5)
 
 
     def get_coords(self):
