@@ -118,7 +118,7 @@ class Game():
         #     print('----')
 
         print('positive actions')
-        print(len(self.positive_actions))
+        print(len(self.positive_decision))
         for i in self.positive_decision:
             # print(i.get_coords())
             trash_x, trash_y = i.get_coords()
