@@ -20,7 +20,7 @@ def trainNeuralNetwork():
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(neural_net.parameters(), lr=0.001, momentum=0.9)
 
-    epoch_num = 4 # najlepiej 10, dla lepszej wiarygodności
+    epoch_num = 10 # najlepiej 10, dla lepszej wiarygodności
     for epoch in range(epoch_num):
         measure_loss = 0.0
         for i, data in enumerate(trainloader, 0):
