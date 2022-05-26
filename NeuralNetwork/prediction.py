@@ -5,9 +5,9 @@ from PIL import Image
 from NeuralNetwork import NeuralNetwork
 
 def getPrediction(img_path):
-
+    
     # Inicjacja sieci neuronowej
-    neural_net = NeuralNetwork()
+    neural_net = NeuralNetwork.NeuralNetwork()
     PATH = './trained_nn.pth'
     img = Image.open(img_path)
     transform_tensor = transforms.ToTensor()(img).unsqueeze_(0)
