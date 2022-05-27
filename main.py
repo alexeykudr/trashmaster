@@ -16,6 +16,7 @@ from path_search_algorthms import bfs
 from path_search_algorthms import a_star, a_star_utils
 from decision_tree import decisionTree
 from NeuralNetwork import prediction
+from game_objects.trash import Trash
 
 from game_objects import aiPlayer
 import itertools
@@ -40,6 +41,7 @@ class Game():
 
     def __init__(self):
         pg.init()
+        pg.font.init()
         self.clock = pg.time.Clock()
         self.dt = self.clock.tick(FPS) / 333.0
         self.screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -64,8 +66,11 @@ class Game():
     def init_game(self):
         # initialize all variables and do all the setup for a new game
 
+        self.text_display = ''
+
         # sprite groups and map array for calculations
         (self.roadTiles, self.wallTiles, self.trashbinTiles), self.mapArray = map.get_tiles()
+        self.trashDisplay = pg.sprite.Group()
         self.agentSprites = pg.sprite.Group()
         # player obj
         self.player = Player(self, 32, 32)
@@ -136,7 +141,16 @@ class Game():
                 random = randint(0, 48)
                 file = files[random]
                 result = prediction.getPrediction(dir + '/' +file, 'trained_nn_20.pth')
+                img = pg.image.load(dir + '/' +file).convert_alpha()
+                img = pg.transform.scale(img, (128, 128))
+                trash = Trash(img, 0, 0, 128, 128)
+                self.trashDisplay.add(trash)
+                self.text_display = result
+                self.draw()
                 print(result + '   ' + file)
+                pg.time.wait(1000)
+            self.text_display = ''
+            self.draw()
 
         # print(self.positive_actions[0])
 
@@ -178,6 +192,11 @@ class Game():
         map.render_tiles(self.roadTiles, self.screen, self.camera)
         map.render_tiles(self.wallTiles, self.screen, self.camera, self.debug_mode)
         map.render_tiles(self.trashbinTiles, self.screen, self.camera)
+        map.render_tiles(self.trashDisplay, self.screen, self.camera)
+
+        # draw text
+        text_surface = pg.font.SysFont('Comic Sans MS', 30).render(self.text_display, False, (0,0,0))
+        self.screen.blit(text_surface, (0,128))
 
         # rerender additional sprites
         for sprite in self.agentSprites:
