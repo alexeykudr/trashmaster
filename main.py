@@ -1,6 +1,8 @@
 from asyncio import sleep
 from calendar import c
+from random import randint
 import time
+import os
 from game_objects.player import Player
 import pygame as pg
 import sys
@@ -13,6 +15,7 @@ from map import map_utils
 from path_search_algorthms import bfs
 from path_search_algorthms import a_star, a_star_utils
 from decision_tree import decisionTree
+from NeuralNetwork import prediction
 
 from game_objects import aiPlayer
 import itertools
@@ -124,6 +127,17 @@ class Game():
             trash_x, trash_y = i.get_coords()
             action = self.get_actions_by_coords(trash_x, trash_y)
             self.t.startAiController(action)
+
+            print('')
+            print('--rozpoczecie sortowania smietnika--')
+            dir = "./resources/trash_dataset/test/all"
+            files = os.listdir(dir)
+            for i in range(0, 10):
+                random = randint(0, 48)
+                file = files[random]
+                result = prediction.getPrediction(dir + '/' +file, 'trained_nn_20.pth')
+                print(result + '   ' + file)
+
         # print(self.positive_actions[0])
 
         # self.t.startAiController(self.positive_actions[0])
