@@ -4,15 +4,15 @@ import torchvision.transforms as transforms
 from PIL import Image
 from NeuralNetwork import NeuralNetwork
 
-def getPrediction(img_path):
+def getPrediction(img_path, network_name):
     
     # Inicjacja sieci neuronowej
     neural_net = NeuralNetwork.NeuralNetwork()
-    PATH = './trained_nn.pth'
+    PATH = './NeuralNetwork/trained_networks/'
     img = Image.open(img_path)
     transform_tensor = transforms.ToTensor()(img).unsqueeze_(0)
     classes = ['glass', 'metal', 'paper', 'plastic']
-    neural_net.load_state_dict(torch.load(PATH))
+    neural_net.load_state_dict(torch.load(PATH + network_name))
     neural_net.eval()
     outputs = neural_net(transform_tensor)
 

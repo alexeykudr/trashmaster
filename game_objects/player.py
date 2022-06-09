@@ -2,6 +2,7 @@ from path_search_algorthms import a_star_utils
 import pygame as pg
 from settings import *
 from game_objects import utils
+from game_objects.hud import HUD
 
 vec = pg.math.Vector2
 
@@ -20,6 +21,10 @@ class Player(pg.sprite.Sprite):
         self.rot = 0
         self.__rotation = a_star_utils.Rotation.RIGHT
         self.mass = 0
+
+        self.hud = HUD()
+        self.hud_group = pg.sprite.Group()
+        self.hud_group.add(self.hud)
 
     def rotation(self) -> a_star_utils.Rotation:
         return self.__rotation
@@ -66,6 +71,7 @@ class Player(pg.sprite.Sprite):
         utils.collide_with_walls(self, self.game.wallTiles, 'y')
         self.rect.center = self.hit_rect.center
 
+        self.hud_group.update()
         
     def get_actual_coords(self):
         # return (self.rect.x / 64, self.rect.y / 64)

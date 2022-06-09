@@ -7,7 +7,7 @@ RED = (255, 0, 0)
 
 
 #game settings
-WIDTH = 1024
+WIDTH = 1024+200
 HEIGHT = 768
 FPS = 60
 
