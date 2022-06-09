@@ -204,6 +204,7 @@ class Game():
             if self.debug_mode:
                 pg.draw.rect(self.screen, CYAN, self.camera.apply_rect(sprite.hit_rect), 1)
 
+        self.player.hud_group.draw(self.screen)
         # finally update screen
         pg.display.flip()
 
