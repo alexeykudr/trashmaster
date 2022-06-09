@@ -1,25 +1,24 @@
-from asyncio import sleep
-from calendar import c
-from random import randint
-import time
 import os
-from game_objects.player import Player
-import pygame as pg
 import sys
-from os import path
+from random import randint
 import math
-from map import *
-from settings import *
-from map import map
-from map import map_utils
-from path_search_algorthms import bfs
-from path_search_algorthms import a_star, a_star_utils
-from decision_tree import decisionTree
-from NeuralNetwork import prediction
+
+import pygame as pg
+import numpy
+
+from game_objects.player import Player
+from game_objects.aiPlayer import aiPlayer
 from game_objects.trash import Trash
 
-from game_objects import aiPlayer
-import itertools
+from map import map
+from map import map_utils
+
+from path_search_algorthms import bfs
+from path_search_algorthms import a_star_controller
+from decision_tree import decisionTree
+from NeuralNetwork import prediction
+
+from settings import *
 
 
 def getTree():
@@ -51,17 +50,7 @@ class Game():
         # because dont work without data.txt
         # self.init_bfs()
         # self.init_a_star()
-        self.t = aiPlayer.aiPlayer(self.player, game=self)
-
-        
-    def get_actions_by_coords(self,x,y):
-        pos = (x,y)
-        offset_x, offset_y = self.camera.offset()
-        clicked_coords = [math.floor(pos[0] / TILESIZE) - offset_x, math.floor(pos[1] / TILESIZE) - offset_y]
-        actions = a_star.search_path(math.floor(self.player.pos[0] / TILESIZE),
-                                        math.floor(self.player.pos[1] / TILESIZE), self.player.rotation(),
-                                        clicked_coords[0], clicked_coords[1], self.mapArray)
-        return actions
+        self.t = aiPlayer(self.player, game=self)
 
     def init_game(self):
         # initialize all variables and do all the setup for a new game
@@ -70,6 +59,12 @@ class Game():
 
         # sprite groups and map array for calculations
         (self.roadTiles, self.wallTiles, self.trashbinTiles), self.mapArray = map.get_tiles()
+
+        # save current map
+        file = open('last_map.nparr', 'wb')
+        numpy.save(file, self.mapArray, allow_pickle=True)
+        file.close
+
         self.trashDisplay = pg.sprite.Group()
         self.agentSprites = pg.sprite.Group()
         # player obj
@@ -80,7 +75,6 @@ class Game():
         # other
         self.debug_mode = False
 
-        
     def init_bfs(self):
         start_node = (0, 0)
         target_node = (18, 18)
@@ -96,17 +90,8 @@ class Game():
                 nextNode = node[1]
         print(realPath)
 
-    def init_a_star(self):
-        # szukanie sciezki na sztywno i wyprintowanie wyniku (tablica stringow)
-        start_x = 0
-        start_y = 0
-        target_x = 6
-        target_y = 2
-        path = a_star.search_path(start_x, start_y, target_x, target_y, self.mapArray)
-        print(path)
-
     def init_decision_tree(self):
-         # logika pracy z drzewem
+        # logika pracy z drzewem
         self.positive_decision = []
         self.negative_decision = []
 
@@ -118,7 +103,7 @@ class Game():
                 self.positive_decision.append(i)
             else:
                 self.negative_decision.append(i)
-        
+
         # print('positive actions')
         # for i in self.positive_actions:
         #     print('----')
@@ -129,8 +114,10 @@ class Game():
         print(len(self.positive_decision))
         for i in self.positive_decision:
             # print(i.get_coords())
+            print('action')
             trash_x, trash_y = i.get_coords()
-            action = self.get_actions_by_coords(trash_x, trash_y)
+            action = a_star_controller.get_actions_for_target_coords(trash_x, trash_y, self)
+            print(action)
             self.t.startAiController(action)
 
             print('')
@@ -140,32 +127,31 @@ class Game():
             for i in range(0, 10):
                 random = randint(0, 48)
                 file = files[random]
-                result = prediction.getPrediction(dir + '/' +file, 'trained_nn_20.pth')
-                img = pg.image.load(dir + '/' +file).convert_alpha()
+                result = prediction.getPrediction(dir + '/' + file, 'trained_nn_20.pth')
+                img = pg.image.load(dir + '/' + file).convert_alpha()
                 img = pg.transform.scale(img, (128, 128))
                 trash = Trash(img, 0, 0, 128, 128)
                 self.trashDisplay.add(trash)
                 self.text_display = result
                 self.draw()
-                print(result + '   ' + file)
-                pg.time.wait(1000)
+                # print(result + '   ' + file)
+                pg.time.wait(100)
             self.text_display = ''
             self.draw()
 
         # print(self.positive_actions[0])
 
         # self.t.startAiController(self.positive_actions[0])
-        
 
     def load_data(self):
-        game_folder = path.dirname(__file__)
-        img_folder = path.join(game_folder, 'resources/textures')
+        game_folder = os.path.dirname(__file__)
+        img_folder = os.path.join(game_folder, 'resources/textures')
 
-        self.player_img = pg.image.load(path.join(img_folder, PLAYER_IMG)).convert_alpha()
+        self.player_img = pg.image.load(os.path.join(img_folder, PLAYER_IMG)).convert_alpha()
         self.player_img = pg.transform.scale(self.player_img, (PLAYER_WIDTH, PLAYER_HEIGHT))
 
     def run(self):
-        # game loop - set self.playing = False to end the game 
+        # game loop - set self.playing = False to end the game
         self.playing = True
         self.init_decision_tree()
         while self.playing:
@@ -195,8 +181,8 @@ class Game():
         map.render_tiles(self.trashDisplay, self.screen, self.camera)
 
         # draw text
-        text_surface = pg.font.SysFont('Comic Sans MS', 30).render(self.text_display, False, (0,0,0))
-        self.screen.blit(text_surface, (0,128))
+        text_surface = pg.font.SysFont('Comic Sans MS', 30).render(self.text_display, False, (0, 0, 0))
+        self.screen.blit(text_surface, (0, 128))
 
         # rerender additional sprites
         for sprite in self.agentSprites:
@@ -221,20 +207,16 @@ class Game():
                 pos = pg.mouse.get_pos()
                 offset_x, offset_y = self.camera.offset()
                 clicked_coords = [math.floor(pos[0] / TILESIZE) - offset_x, math.floor(pos[1] / TILESIZE) - offset_y]
-                actions = a_star.search_path(math.floor(self.player.pos[0] / TILESIZE),
-                                             math.floor(self.player.pos[1] / TILESIZE), self.player.rotation(),
-                                             clicked_coords[0], clicked_coords[1], self.mapArray)
-                # print(actions)
-                
+                actions = a_star_controller.get_actions_by_coords(clicked_coords[0], clicked_coords[1], self)
+
                 if (actions != None):
                     self.t.startAiController(actions)
 
-                
 
 # create the game object
 
 if __name__ == "__main__":
     g = Game()
-    
+
     g.run()
     g.show_go_screen()
