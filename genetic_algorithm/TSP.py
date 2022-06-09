@@ -1,10 +1,13 @@
 import numpy as np, random, operator, pandas as pd, matplotlib.pyplot as plt
+from path_search_algorthms import a_star
+from decision_tree import decisionTree
 
 # klasa tworząca miasta czy też śmietniki
 class City:
-    def __init__(self, x, y):
+    def __init__(self, x, y, dist):
         self.x = x
         self.y = y
+        # self.dist = distance
     
     def distance(self, city):
         xDis = abs(self.x - city.x)

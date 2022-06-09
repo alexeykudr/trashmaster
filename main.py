@@ -17,7 +17,7 @@ from path_search_algorthms import a_star, a_star_utils
 from decision_tree import decisionTree
 from NeuralNetwork import prediction
 from game_objects.trash import Trash
-
+from genetic_algorithm import TSP
 from game_objects import aiPlayer
 import itertools
 
@@ -155,7 +155,14 @@ class Game():
         # print(self.positive_actions[0])
 
         # self.t.startAiController(self.positive_actions[0])
+    def init_TSP(self):
+        city_list = self.positive_decision
+        dist = a_star.path_dist
         
+        for i in range(0,25):
+            city_list.append(TSP.City(x=int(random.random() * 200), y=int(random.random() * 200)))
+
+        tsp_list = TSP.geneticAlgorithm(population=city_list, popSize=100, eliteSize=20, mutationRate=0.01, generations=1000)
 
     def load_data(self):
         game_folder = path.dirname(__file__)
