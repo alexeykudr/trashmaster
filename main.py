@@ -148,13 +148,15 @@ class Game():
                 result = prediction.getPrediction(dir + '/' + file, 'trained_nn_20.pth')
                 img = pg.image.load(dir + '/' + file).convert_alpha()
                 img = pg.transform.scale(img, (128, 128))
-                trash = Trash(img, 0, 0, 128, 128)
+                offset_x, offset_y = self.camera.offset()
+                trash = Trash(img, math.floor(-offset_x * TILESIZE), math.floor(-offset_y * TILESIZE), 128, 128)
+                self.trashDisplay.empty()
                 self.trashDisplay.add(trash)
                 self.text_display = result
                 self.draw()
-                # print(result + '   ' + file)
                 pg.time.wait(100)
             self.text_display = ''
+            self.trashDisplay.empty()
             self.draw()
 
         # print(self.positive_actions[0])
@@ -167,11 +169,11 @@ class Game():
         for i in self.positive_decision:
             trash_x, trash_y = i.get_coords()
             # city_list.append(TSP.City(x=int(trash_x), y=int(trash_y), array=self.mapArray))
-            city_list.append(TSP.City(x=int(trash_x), y=int(trash_y)))
+            city_list.append(TSP.City(x=trash_x, y=trash_y, array=self.mapArray))
         
         
         # dist = a_star.get_cost
-        self.tsp_list = TSP.geneticAlgorithmPlot(population=city_list, popSize=100, eliteSize=20, mutationRate=0.01, generations=300)
+        self.tsp_list = TSP.geneticAlgorithmPlot(population=city_list, popSize=100, eliteSize=20, mutationRate=0.01, generations=300, array=self.mapArray)
         print(self.tsp_list)
 
     def load_data(self):

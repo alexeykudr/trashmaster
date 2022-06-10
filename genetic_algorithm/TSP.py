@@ -6,21 +6,23 @@ import math
 
 # klasa tworząca miasta czy też śmietniki
 class City:
-    def __init__(self, x, y):
+    def __init__(self, x, y, array):
         self.x = x
         self.y = y
-        #self.array = array
+        self.array = array
         # self.dist = distance
+
+
 
     #dystans to d = sqrt(x^2 + y^2)
     def distance(self, city):
 
         #getting distance by astar gives wrong final distance (intial = final)
-        #return get_cost(math.floor(self.x / TILESIZE), math.floor(self.y / TILESIZE), math.floor(city.x / TILESIZE), math.floor(city.y / TILESIZE), self.array)
-        xDis = abs(self.x - city.x)
-        yDis = abs(self.y - city.y)
-        distance = np.sqrt((xDis ** 2) + (yDis ** 2))
-        return distance
+        return get_cost(math.floor(self.x / TILESIZE), math.floor(self.y / TILESIZE), math.floor(city.x / TILESIZE), math.floor(city.y / TILESIZE), self.array)
+        # xDis = abs(self.x - city.x)
+        # yDis = abs(self.y - city.y)
+        # distance = np.sqrt((xDis ** 2) + (yDis ** 2))
+        # return distance
 
     def __repr__(self):
         return "(" + str(self.x) + "," + str(self.y) + ")"
@@ -30,10 +32,11 @@ class City:
 # inverse of route distance
 # we want to minimize distance so the larger the fitness the better
 class Fitness:
-    def __init__(self, route):
+    def __init__(self, route, distanceArray):
         self.route = route
         self.distance = 0
         self.fitness = 0.0
+        self.distanceArray = distanceArray
 
     def routeDistance(self):
         if self.distance == 0:
@@ -45,7 +48,8 @@ class Fitness:
                     toCity = self.route[i + 1]
                 else:
                     toCity = self.route[0]
-                pathDistance += fromCity.distance(toCity)
+                # pathDistance += fromCity.distance(toCity)
+                pathDistance += self.distanceArray[str(fromCity.x)+" "+str(fromCity.y)+" "+str(toCity.x)+" "+str(toCity.y)]
             self.distance = pathDistance
         return self.distance
 
@@ -71,10 +75,10 @@ def initialPopulation(popSize, cityList):
 
 
 # ranking fitness of given route, output is ordered list with route id and its fitness score
-def rankRoutes(population):
+def rankRoutes(population, distanceArray):
     fitnessResults = {}
     for i in range(0, len(population)):
-        fitnessResults[i] = Fitness(population[i]).routeFitness()
+        fitnessResults[i] = Fitness(population[i], distanceArray).routeFitness()
     return sorted(fitnessResults.items(), key=operator.itemgetter(1), reverse=True)
 
 
@@ -177,8 +181,8 @@ def mutatePopulation(population, mutationRate):
 
 
 # creating new generation
-def nextGeneration(currentGen, eliteSize, mutationRate):
-    popRanked = rankRoutes(currentGen)  # rank routes in current gen
+def nextGeneration(currentGen, eliteSize, mutationRate, distanceArray):
+    popRanked = rankRoutes(currentGen, distanceArray)  # rank routes in current gen
     selectionResults = selection(popRanked, eliteSize)  # determining potential parents
     matingpool = matingPool(currentGen, selectionResults)  # creating mating pool
     children = breedPopulation(matingpool, eliteSize)  # creating new gen
@@ -186,15 +190,15 @@ def nextGeneration(currentGen, eliteSize, mutationRate):
     return nextGeneration
 
 
-def geneticAlgorithm(population, popSize, eliteSize, mutationRate, generations):
+def geneticAlgorithm(population, popSize, eliteSize, mutationRate, generations, distanceArray):
     pop = initialPopulation(popSize, population)
-    print("Initial distance: " + str(1 / rankRoutes(pop)[0][1]))
+    print("Initial distance: " + str(1 / rankRoutes(pop, distanceArray)[0][1]))
 
     for i in range(0, generations):
-        pop = nextGeneration(pop, eliteSize, mutationRate)
+        pop = nextGeneration(pop, eliteSize, mutationRate, distanceArray)
 
-    print("Final distance: " + str(1 / rankRoutes(pop)[0][1]))
-    bestRouteIndex = rankRoutes(pop)[0][0]
+    print("Final distance: " + str(1 / rankRoutes(pop, distanceArray)[0][1]))
+    bestRouteIndex = rankRoutes(pop, distanceArray)[0][0]
     bestRoute = pop[bestRouteIndex]
     return bestRoute
 
@@ -212,18 +216,29 @@ cityList = []
 
 # plotting the progress
 
-def geneticAlgorithmPlot(population, popSize, eliteSize, mutationRate, generations):
+def distanceFromCityToCity(cityFrom, city, array):
+    return get_cost(math.floor(cityFrom.x / TILESIZE), math.floor(cityFrom.y / TILESIZE), math.floor(city.x / TILESIZE), math.floor(city.y / TILESIZE), array)
+
+def geneticAlgorithmPlot(population, popSize, eliteSize, mutationRate, generations, array):
+    a_star_distances = {}
+    for city in population:
+        for target in population:
+            if city == target:
+                continue
+            else:
+                a_star_distances[str(city.x)+" "+str(city.y)+" "+str(target.x)+" "+str(target.y)] = distanceFromCityToCity(city, target, array)
+
     pop = initialPopulation(popSize, population)
     progress = []
-    progress.append(1 / rankRoutes(pop)[0][1])
-    print("Initial distance: " + str(1 / rankRoutes(pop)[0][1]))
+    progress.append(1 / rankRoutes(pop, a_star_distances)[0][1])
+    print("Initial distance: " + str(1 / rankRoutes(pop, a_star_distances)[0][1]))
 
     for i in range(0, generations):
-        pop = nextGeneration(pop, eliteSize, mutationRate)
-        progress.append(1 / rankRoutes(pop)[0][1])
+        pop = nextGeneration(pop, eliteSize, mutationRate, a_star_distances)
+        progress.append(1 / rankRoutes(pop, a_star_distances)[0][1])
 
-    print("Final distance: " + str(1 / rankRoutes(pop)[0][1]))
-    bestRouteIndex = rankRoutes(pop)[0][0]
+    print("Final distance: " + str(1 / rankRoutes(pop, a_star_distances)[0][1]))
+    bestRouteIndex = rankRoutes(pop, a_star_distances)[0][0]
     bestRoute = pop[bestRouteIndex]
 
     plt.plot(progress)
