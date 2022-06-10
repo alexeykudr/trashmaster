@@ -101,10 +101,10 @@ class Game():
             atrrs_container = i.get_attributes()
             x, y = i.get_coords()
             dec = decisionTree.decision(getTree(), *atrrs_container)
-            if dec[0] == 1:
-                self.positive_decision.append(i)
-            else:
-                self.negative_decision.append(i)
+            # if dec[0] == 1:
+            self.positive_decision.append(i)     # zmiana po to by losowało wszystkie smietniki a nie poprawne tylko, zeby ladniej bylo widac algorytm genetyczny
+            # else:
+            #     self.negative_decision.append(i)
 
         print('positive actions')
         print(len(self.positive_decision))
@@ -114,12 +114,26 @@ class Game():
         #     print(i)
         #     print('----')
     def decsion_tree_move(self):
-
-        for i in self.positive_decision:
+        
+        for i in range(0,len(self.positive_decision)):
             # print(i.get_coords())
             print('action')
-            trash_x, trash_y = i.get_coords()
+            
+            
+            # trash_x, trash_y = i.get_coords()
+            
+            # for ii in self.tsp_list:
+            temp_tsp = str(self.tsp_list[i])
+            temp_tsp = temp_tsp.strip("()")
+            temp_tsp = temp_tsp.split(",")
+            trash_x = int(temp_tsp[0])
+            trash_y = int(temp_tsp[1])
+
+          
+            print(trash_x, trash_y)
+
             action = a_star_controller.get_actions_for_target_coords(trash_x, trash_y, self)
+
             print(action)
             self.t.startAiController(action)
 
@@ -127,7 +141,7 @@ class Game():
             print('--rozpoczecie sortowania smietnika--')
             dir = "./resources/trash_dataset/test/all"
             files = os.listdir(dir)
-            for i in range(0, 10):
+            for j in range(0, 10):
                 random = randint(0, 48)
                 file = files[random]
                 result = prediction.getPrediction(dir + '/' + file, 'trained_nn_20.pth')
@@ -155,8 +169,8 @@ class Game():
         
         
         # dist = a_star.get_cost
-        tsp_list = TSP.geneticAlgorithmPlot(population=city_list, popSize=100, eliteSize=20, mutationRate=0.01, generations=200)
-        print(tsp_list)
+        self.tsp_list = TSP.geneticAlgorithmPlot(population=city_list, popSize=100, eliteSize=20, mutationRate=0.01, generations=200)
+        print(self.tsp_list)
 
     def load_data(self):
         game_folder = os.path.dirname(__file__)

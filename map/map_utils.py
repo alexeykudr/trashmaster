@@ -21,7 +21,7 @@ def generate_map():
         map[y][x] = 1
 
     # generowanie smietnikow
-    for i in range(0, 30):
+    for i in range(0, 20):
         x = random.randint(0, MAP_WIDTH-1)
         y = random.randint(0, MAP_HEIGHT-1)
         map[y][x] = 2

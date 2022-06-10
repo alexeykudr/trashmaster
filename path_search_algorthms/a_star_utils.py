@@ -84,7 +84,9 @@ def get_rotate_change(rotationA: Rotation, rotationB: Rotation) -> int:
     return int(rotationA) - int(rotationB)
 
 # get new rotation for target_node as neighbour of start_node
-def get_needed_rotation(start_node: Node, target_node: Node) -> Rotation:
+def get_needed_rotation(start_node: Node or bool, target_node: Node) -> Rotation:
+    if(start_node == False):
+        return target_node.rotation
     if (start_node.x - target_node.x > 0):
         return Rotation.LEFT
     if (start_node.x - target_node.x < 0):

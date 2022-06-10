@@ -12,7 +12,7 @@ def getPrediction(img_path, network_name):
     img = Image.open(img_path)
     transform_tensor = transforms.ToTensor()(img).unsqueeze_(0)
     classes = ['glass', 'metal', 'paper', 'plastic']
-    neural_net.load_state_dict(torch.load(PATH + network_name))
+    neural_net.load_state_dict(torch.load(PATH + network_name, map_location='cpu'))
     neural_net.eval()
     outputs = neural_net(transform_tensor)
 
