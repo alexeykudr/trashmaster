@@ -4,7 +4,7 @@ from decision_tree import decisionTree
 
 # klasa tworząca miasta czy też śmietniki
 class City:
-    def __init__(self, x, y, dist):
+    def __init__(self, x, y):
         self.x = x
         self.y = y
         # self.dist = distance
