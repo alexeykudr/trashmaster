@@ -3,9 +3,9 @@ from enum import Enum
 from random import randrange
 from map.tile import Tile
 class Trashbin(Tile):
-    def __init__(self, img, x, y, width, height, waste_type):
+    def __init__(self, img, x, y, width, height):
         super().__init__(img, x, y, width, height)
-        # dis_dump	dis_trash	mass	space	trash_mass	trash_space
+
         self.x = x
         self.y = y
         

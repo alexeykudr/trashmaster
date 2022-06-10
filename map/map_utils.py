@@ -15,13 +15,13 @@ def generate_map():
     map = get_blank_map_array()
 
     # generowanie scian
-    for i in range(0, 20):
+    for i in range(0, WALL_NUMBER):
         x = random.randint(0, MAP_WIDTH-1)
         y = random.randint(0, MAP_HEIGHT-1)
         map[y][x] = 1
 
     # generowanie smietnikow
-    for i in range(0, 20):
+    for i in range(0, TRASHBIN_NUMBER):
         x = random.randint(0, MAP_WIDTH-1)
         y = random.randint(0, MAP_HEIGHT-1)
         map[y][x] = 2
@@ -53,7 +53,7 @@ def get_sprites(map, pattern):
             elif tileId == 2:
                 trashbinId = random.randint(0, 4)
                 tile = Tile(pattern[0], offsetX, offsetY, TILE_SIZE_PX, TILE_SIZE_PX)
-                trashbin = Trashbin(trashbin_pattern[trashbinId], offsetX, offsetY, 32, 30, trashbinId)
+                trashbin = Trashbin(trashbin_pattern[trashbinId], offsetX, offsetY, 32, 30)
                 roadTiles.add(tile)
                 trashbinTiles.add(trashbin)
                 trashbins.append(trashbin)
@@ -92,11 +92,5 @@ class Camera:
         x = max(-(self.width - WIDTH), x)  # right
         y = max(-(self.height - HEIGHT), y)  # bottom
         self.camera = pg.Rect(x, y, self.width, self.height)
-
-
-
-
-
-
 
 
