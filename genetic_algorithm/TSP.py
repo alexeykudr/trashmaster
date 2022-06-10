@@ -190,28 +190,9 @@ def nextGeneration(currentGen, eliteSize, mutationRate, distanceArray):
     return nextGeneration
 
 
-def geneticAlgorithm(population, popSize, eliteSize, mutationRate, generations, distanceArray):
-    pop = initialPopulation(popSize, population)
-    print("Initial distance: " + str(1 / rankRoutes(pop, distanceArray)[0][1]))
-
-    for i in range(0, generations):
-        pop = nextGeneration(pop, eliteSize, mutationRate, distanceArray)
-
-    print("Final distance: " + str(1 / rankRoutes(pop, distanceArray)[0][1]))
-    bestRouteIndex = rankRoutes(pop, distanceArray)[0][0]
-    bestRoute = pop[bestRouteIndex]
-    return bestRoute
-
-
 # tutaj ma być lista kordów potencjalnych śmietników z drzewa decyzyjnego
 
 cityList = []
-
-
-# for i in range(0,25):
-#     cityList.append(City(x=int(random.random() * 200), y=int(random.random() * 200)))
-
-# geneticAlgorithm(population=cityList, popSize=100, eliteSize=20, mutationRate=0.01, generations=1000)
 
 
 # plotting the progress

@@ -49,9 +49,6 @@ class Game():
         pg.display.set_caption("Trashmaster")
         self.load_data()
         self.init_game()
-        # because dont work without data.txt
-        # self.init_bfs()
-        # self.init_a_star()
         self.t = aiPlayer.aiPlayer(self.player, game=self)
 
     def init_game(self):
@@ -101,10 +98,10 @@ class Game():
             atrrs_container = i.get_attributes()
             x, y = i.get_coords()
             dec = decisionTree.decision(getTree(), *atrrs_container)
-            # if dec[0] == 1:
-            self.positive_decision.append(i)     # zmiana po to by losowało wszystkie smietniki a nie poprawne tylko, zeby ladniej bylo widac algorytm genetyczny
-            # else:
-            #     self.negative_decision.append(i)
+            if dec[0] == 1:
+                self.positive_decision.append(i)     # zmiana po to by losowało wszystkie smietniki a nie poprawne tylko, zeby ladniej bylo widac algorytm genetyczny
+            else:
+                self.negative_decision.append(i)
 
         print('positive actions')
         print(len(self.positive_decision))
@@ -121,9 +118,7 @@ class Game():
             print('action')
             
             
-            # trash_x, trash_y = i.get_coords()
             
-            # for ii in self.tsp_list:
             temp_tsp = str(self.tsp_list[i])
             temp_tsp = temp_tsp.strip("()")
             temp_tsp = temp_tsp.split(",")
@@ -161,19 +156,15 @@ class Game():
 
         # print(self.positive_actions[0])
 
-        # self.t.startAiController(self.positive_actions[0])
     def init_TSP(self):
         
         city_list =[]
 
         for i in self.positive_decision:
             trash_x, trash_y = i.get_coords()
-            # city_list.append(TSP.City(x=int(trash_x), y=int(trash_y), array=self.mapArray))
             city_list.append(TSP.City(x=trash_x, y=trash_y, array=self.mapArray))
         
-        
-        # dist = a_star.get_cost
-        self.tsp_list = TSP.geneticAlgorithmPlot(population=city_list, popSize=100, eliteSize=20, mutationRate=0.01, generations=300, array=self.mapArray)
+        self.tsp_list = TSP.geneticAlgorithmPlot(population=city_list, popSize=100, eliteSize=20, mutationRate=0.01, generations=500, array=self.mapArray)
         print(self.tsp_list)
 
     def load_data(self):
