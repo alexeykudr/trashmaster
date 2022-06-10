@@ -113,6 +113,7 @@ class Game():
         #     print('----')
         #     print(i)
         #     print('----')
+        self.draw()
     def decsion_tree_move(self):
         
         for i in range(0,len(self.positive_decision)):
@@ -169,7 +170,7 @@ class Game():
         
         
         # dist = a_star.get_cost
-        self.tsp_list = TSP.geneticAlgorithmPlot(population=city_list, popSize=100, eliteSize=20, mutationRate=0.01, generations=200)
+        self.tsp_list = TSP.geneticAlgorithmPlot(population=city_list, popSize=100, eliteSize=20, mutationRate=0.01, generations=300)
         print(self.tsp_list)
 
     def load_data(self):
