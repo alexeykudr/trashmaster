@@ -4,6 +4,8 @@ from path_search_algorthms import a_star_utils as utils
 
 def get_cost(start_x: int, start_y: int, target_x: int, target_y: int, array):
     actions = search_path(start_x, start_y, utils.Rotation.NONE, target_x, target_y, array)
+    if actions is None:
+        return 1
     return len(actions)
 
 

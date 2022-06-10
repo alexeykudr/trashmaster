@@ -166,6 +166,7 @@ class Game():
 
         for i in self.positive_decision:
             trash_x, trash_y = i.get_coords()
+            # city_list.append(TSP.City(x=int(trash_x), y=int(trash_y), array=self.mapArray))
             city_list.append(TSP.City(x=int(trash_x), y=int(trash_y)))
         
         
